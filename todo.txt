@@ -1,0 +1,13 @@
+TODO:
+Colleberative attacks (Several regions attacks one region)
+Spread attacks (Split up one region towards several regions if profitable)
+Merge armies next to each other to get more armies for attack
+Better prediction where the enemy will place his armies
+Handle deadlocks better!
+
+TESTING:
+Be more aggressive on neutrals, but also use bigger armies to reduce loss
+Prioritize neutrals with a few armies if possible to take over super regions
+
+FINISHED:
+Fixed priority issues when placing armies on super regions
