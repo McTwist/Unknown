@@ -21,8 +21,8 @@ protected:
 	virtual void onSetupMapNeighbor(int region, const std::vector<int> & neighbors) {}
 	virtual void onSetupMapWasteland(int region) {}
 	virtual void onPickStartingRegions(float time, const std::vector<int> & regions) {}
-	virtual void onSettingsTimebank(int ms) {}
-	virtual void onSettingsTimePerMove(int ms) {}
+	virtual void onSettingsTimebank(float time) {}
+	virtual void onSettingsTimePerMove(float time) {}
 	virtual void onSettingsMaxRounds(int rounds) {}
 	virtual void onSettingsYourBot(const std::string & name) {}
 	virtual void onSettingsOpponentBot(const std::string & name) {}

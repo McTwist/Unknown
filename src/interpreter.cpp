@@ -237,7 +237,7 @@ void Interpreter::ReceiveCommand(const std::vector<std::string> & cmds)
 		// settings timebank -i
 		if (settings == "timebank")
 		{
-			int time = atoi(cmds[2].c_str());
+			float time = ConvertTime(atoi(cmds[2].c_str()));
 			// Send in the data
 			for (it = m_readers.begin(); it != m_readers.end(); ++it)
 				(*it)->onSettingsTimebank(time);
@@ -245,7 +245,7 @@ void Interpreter::ReceiveCommand(const std::vector<std::string> & cmds)
 		// settings time_per_move -i
 		else if (settings == "time_per_move")
 		{
-			int time = atoi(cmds[2].c_str());
+			float time = ConvertTime(atoi(cmds[2].c_str()));
 			// Send in the data
 			for (it = m_readers.begin(); it != m_readers.end(); ++it)
 				(*it)->onSettingsTimePerMove(time);
