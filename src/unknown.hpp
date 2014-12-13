@@ -57,6 +57,7 @@ private:
 	
 	// Input
 	void onPickStartingRegions(float time, const std::vector<int> & regions);
+	void onPickStartingRegion(float time, const std::vector<int> & regions);
 	void onSettingsStartingArmies(int amount);
 	void onGoPlaceArmies(float time);
 	void onGoAttackTransfer(float time);

@@ -18,10 +18,6 @@ Unknown::Unknown()
 // Pick starting regions
 void Unknown::onPickStartingRegions(float time, const std::vector<int> & regions)
 {
-	// Note: Picking a region changed quite drastically
-	//       Now it will call this method and you need to return only one region
-	// How many regions that can be picked
-	static const int PICK_REGIONS = 1;
 	Timer timer;
 	timer.Start();
 	// Possible strategies:
@@ -29,7 +25,7 @@ void Unknown::onPickStartingRegions(float time, const std::vector<int> & regions
 	// * Smaller super region (Bonus army)
 	// * Close regions (Better mobility)
 	// * Bigger super regions (Spread fast)
-	std::vector<int> ret(regions.begin(), regions.begin() + PICK_REGIONS);
+	std::vector<int> ret(regions.begin(), regions.begin() + 6);
 	SetStartingRegions(ret);
 	Send();
 	
@@ -37,6 +33,25 @@ void Unknown::onPickStartingRegions(float time, const std::vector<int> & regions
 	// Time it
 	if (dt > time * 0.5f)
 		Debug::Log("Timing(pick_staring_regions): %.3f\n", dt);
+}
+
+// Pick starting region
+void Unknown::onPickStartingRegion(float time, const std::vector<int> & regions)
+{
+	Timer timer;
+	timer.Start();
+	// Possible strategies:
+	// * Less neighbors (Chokepoint)
+	// * Smaller super region (Bonus army)
+	// * Close regions (Better mobility)
+	// * Bigger super regions (Spread fast)
+	PickStartingRegion(regions.front());
+	Send();
+	
+	float dt = timer.MilliSeconds();
+	// Time it
+	if (dt > time * 0.5f)
+		Debug::Log("Timing(pick_staring_region): %.3f\n", dt);
 }
 
 // Get starting armies
