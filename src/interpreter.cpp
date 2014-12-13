@@ -202,6 +202,18 @@ void Interpreter::ReceiveCommand(const std::vector<std::string> & cmds)
 					(*it)->onSetupMapNeighbor(region, neighbors);
 			}
 		}
+		// setup_map wastelands [-i ...]
+		else if (setup == "wastelands")
+		{
+			for (int i = 2; i < size; ++i)
+			{
+				int region = atoi(cmds[i].c_str());
+				
+				// Send in the data
+				for (it = m_readers.begin(); it != m_readers.end(); ++it)
+					(*it)->onSetupMapWasteland(region);
+			}
+		}
 	}
 	// pick_starting_regions -t [-i ...]
 	else if (cmd == "pick_starting_regions")
@@ -222,8 +234,32 @@ void Interpreter::ReceiveCommand(const std::vector<std::string> & cmds)
 		if (size < 2)
 			return;
 		std::string settings = cmds[1];
+		// settings timebank -i
+		if (settings == "timebank")
+		{
+			int time = atoi(cmds[2].c_str());
+			// Send in the data
+			for (it = m_readers.begin(); it != m_readers.end(); ++it)
+				(*it)->onSettingsTimebank(time);
+		}
+		// settings time_per_move -i
+		else if (settings == "time_per_move")
+		{
+			int time = atoi(cmds[2].c_str());
+			// Send in the data
+			for (it = m_readers.begin(); it != m_readers.end(); ++it)
+				(*it)->onSettingsTimePerMove(time);
+		}
+		// settings max_rounds -i
+		else if (settings == "max_rounds")
+		{
+			int rounds = atoi(cmds[2].c_str());
+			// Send in the data
+			for (it = m_readers.begin(); it != m_readers.end(); ++it)
+				(*it)->onSettingsMaxRounds(rounds);
+		}
 		// settings your_bot -b
-		if (settings == "your_bot")
+		else if (settings == "your_bot")
 		{
 			// Send in the data
 			for (it = m_readers.begin(); it != m_readers.end(); ++it)
@@ -302,7 +338,6 @@ void Interpreter::ReceiveCommand(const std::vector<std::string> & cmds)
 			}
 		}
 	}
-	// opponent_moves [-m ...]
 	else if (cmd == "go")
 	{
 		// Avoid crash
@@ -381,11 +416,17 @@ void Writer::AttackTransfer(const std::string & name, int source_region, int tar
 	m_buffer << name << " attack/transfer " << source_region << ' ' << target_region << ' ' << amount;
 }
 
+// Ignore this round and let it pass
+void Writer::NoMoves()
+{
+	m_buffer << "No moves";
+}
+
 // Force a random move
 void Writer::RandomMove()
 {
 	// This is defined in the engine
-	m_buffer << "No moves";
+	NoMoves();
 }
 
 // Flush the buffer

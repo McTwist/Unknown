@@ -19,7 +19,11 @@ protected:
 	virtual void onSetupMapSuperRegion(int super_region, int bonus) {}
 	virtual void onSetupMapRegion(int region, int super_region) {}
 	virtual void onSetupMapNeighbor(int region, const std::vector<int> & neighbors) {}
+	virtual void onSetupMapWasteland(int region) {}
 	virtual void onPickStartingRegions(float time, const std::vector<int> & regions) {}
+	virtual void onSettingsTimebank(int ms) {}
+	virtual void onSettingsTimePerMove(int ms) {}
+	virtual void onSettingsMaxRounds(int rounds) {}
 	virtual void onSettingsYourBot(const std::string & name) {}
 	virtual void onSettingsOpponentBot(const std::string & name) {}
 	virtual void onSettingsStartingArmies(int amount) {}
@@ -41,6 +45,7 @@ protected:
 	void SetStartingRegions(const std::vector<int> & regions);
 	void PlaceArmies(const std::string & name, int region, int amount);
 	void AttackTransfer(const std::string & name, int source_region, int target_region, int amount);
+	void NoMoves();
 	void RandomMove();
 	
 	// Flush the current buffer
