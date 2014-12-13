@@ -21,6 +21,7 @@ protected:
 	virtual void onSetupMapNeighbor(int region, const std::vector<int> & neighbors) {}
 	virtual void onSetupMapWasteland(int region) {}
 	virtual void onPickStartingRegions(float time, const std::vector<int> & regions) {}
+	virtual void onPickStartingRegion(float time, const std::vector<int> & regions) {}
 	virtual void onSettingsTimebank(float time) {}
 	virtual void onSettingsTimePerMove(float time) {}
 	virtual void onSettingsMaxRounds(int rounds) {}
@@ -43,6 +44,7 @@ protected:
 	
 	// Sending data
 	void SetStartingRegions(const std::vector<int> & regions);
+	void PickStartingRegion(int region);
 	void PlaceArmies(const std::string & name, int region, int amount);
 	void AttackTransfer(const std::string & name, int source_region, int target_region, int amount);
 	void NoMoves();

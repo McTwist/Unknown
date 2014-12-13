@@ -228,6 +228,19 @@ void Interpreter::ReceiveCommand(const std::vector<std::string> & cmds)
 		for (it = m_readers.begin(); it != m_readers.end(); ++it)
 			(*it)->onPickStartingRegions(time, regions);
 	}
+	// pick_starting_region -t [-i ...]
+	else if (cmd == "pick_starting_region")
+	{
+		// Avoid crash
+		if (size < 2)
+			return;
+		float time = ConvertTime(atoi(cmds[1].c_str()));
+		std::vector<int> regions = atoi(std::vector<std::string>(cmds.begin()+2, cmds.end()));
+		
+		// Send in the data
+		for (it = m_readers.begin(); it != m_readers.end(); ++it)
+			(*it)->onPickStartingRegion(time, regions);
+	}
 	else if (cmd == "settings")
 	{
 		// Avoid crash
@@ -396,6 +409,12 @@ void Writer::SetStartingRegions(const std::vector<int> & regions)
 		if (it + 1 != regions.end())
 			m_buffer << ' ';
 	}
+}
+// Pick starting region
+void Writer::PickStartingRegion(int region)
+{
+	// Note: Could make so it is stackable
+	m_buffer << region;
 }
 
 // Place armies
