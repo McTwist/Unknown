@@ -18,6 +18,10 @@ Unknown::Unknown()
 // Pick starting regions
 void Unknown::onPickStartingRegions(float time, const std::vector<int> & regions)
 {
+	// Note: Picking a region changed quite drastically
+	//       Now it will call this method and you need to return only one region
+	// How many regions that can be picked
+	static const PICK_REGIONS = 1;
 	Timer timer;
 	timer.Start();
 	// Possible strategies:
@@ -25,7 +29,7 @@ void Unknown::onPickStartingRegions(float time, const std::vector<int> & regions
 	// * Smaller super region (Bonus army)
 	// * Close regions (Better mobility)
 	// * Bigger super regions (Spread fast)
-	std::vector<int> ret(regions.begin(), regions.begin()+6);
+	std::vector<int> ret(regions.begin(), regions.begin() + PICK_REGIONS);
 	SetStartingRegions(ret);
 	Send();
 	
@@ -479,7 +483,7 @@ void Unknown::SendPlaceArmies()
 {
 	// Nothing decided, do nothing
 	if (m_placement.empty())
-		RandomMove();
+		NoMove();
 	// Place everything
 	else
 	{
@@ -499,7 +503,7 @@ void Unknown::SendAttackTransfer()
 {
 	// Nothing decided, do nothing
 	if (m_moves.empty())
-		RandomMove();
+		NoMove();
 	// Move everything
 	else
 	{
