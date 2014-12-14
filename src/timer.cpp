@@ -2,6 +2,7 @@
 
 #include <string.h>
 
+#ifndef TIMER_DISABLED
 Timer::Timer()
 {
 	memset(&m_start, 0, sizeof(Time));
@@ -109,3 +110,41 @@ void Timer::GetTime(Time & time)
 	gettimeofday(&time, 0);
 #endif
 }
+
+#else
+
+// Lazy implementation, we're not running on Windows anyway
+
+Timer::Timer()
+{
+}
+
+// Start the timer
+void Timer::Start()
+{
+}
+
+// Stop the timer
+void Timer::Stop()
+{
+}
+
+// Get seconds
+float Timer::Seconds()
+{
+	return 0.0f;
+}
+
+// Get milliseconds
+float Timer::MilliSeconds()
+{
+	return 0.0f;
+}
+
+// Get microseconds
+float Timer::MicroSeconds()
+{
+	return 0.0f;
+}
+
+#endif
