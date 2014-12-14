@@ -25,12 +25,13 @@ add_definitions(-D UNIX=1)
 
 file(GLOB sources "*.cpp")
 file(GLOB headers "*.hpp")
+file(GLOB c_headers "*.h")
 
 # Add include directories
 include_directories(".")
 
 # Create executable
-add_executable(program ${sources})
+add_executable(unknown ${sources} ${headers} ${c_headers})
 
 # Link together everything
-target_link_libraries(program)
+target_link_libraries(unknown)
