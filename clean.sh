@@ -6,6 +6,3 @@ OUTPUT="build/"
 
 # Remove the folder
 rm -rf $OUTPUT
-
-# Remove program
-rm program
