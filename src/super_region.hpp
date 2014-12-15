@@ -26,7 +26,10 @@ public:
 private:
 	int m_id;
 	int m_bonus;
-	std::map<int, CRegion> m_regions;
+
+	typedef std::map<int, CRegion> RegionMap;
+	
+	RegionMap m_regions;
 };
 
 #endif // SUPER_REGION_HPP

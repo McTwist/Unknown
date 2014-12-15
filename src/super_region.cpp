@@ -38,7 +38,7 @@ void SuperRegion::AddRegion(Region * region)
 // Get region if it exists
 Region * SuperRegion::GetRegion(int id)
 {
-	std::map<int, Region *>::iterator it = m_regions.find(id);
+	RegionMap::iterator it = m_regions.find(id);
 	if (it == m_regions.end())
 		return 0;
 	return it->second;
@@ -48,7 +48,7 @@ Region * SuperRegion::GetRegion(int id)
 int SuperRegion::GetBotRegionCount(Bot * bot)
 {
 	int count = 0;
-	for (std::map<int, Region *>::iterator it = m_regions.begin(); it != m_regions.end(); ++it)
+	for (RegionMap::iterator it = m_regions.begin(); it != m_regions.end(); ++it)
 		if (it->second->GetOwner() == bot)
 			++count;
 	return count;
