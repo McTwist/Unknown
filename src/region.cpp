@@ -257,12 +257,12 @@ void Region::Unique(Regions & regions)
 RegionNode::RegionNode()
 : m_parent(0)
 {}
-RegionNode::RegionNode(Region * region)
+RegionNode::RegionNode(const Region * region)
 : m_parent(region)
 {}
 
 // Get region placed in the node
-Region * RegionNode::GetRegion() const
+const Region * RegionNode::GetRegion() const
 {
 	return m_parent;
 }
@@ -283,14 +283,14 @@ bool RegionNode::IsGoal(RegionNode & nodeGoal)
 // Get sucessors
 bool RegionNode::GetSuccessors(AStarSearch<RegionNode> * astarsearch, RegionNode * parent_node)
 {
-	Region * parent = (parent_node) ? parent_node->m_parent : 0;
+	const Region * parent = (parent_node) ? parent_node->m_parent : 0;
 	
 	RegionNode new_node;
 	
 	bool corr = true;
 	
 	const Regions & neighbors = m_parent->GetNeighbors();
-	Region * reg;
+	const Region * reg;
 	
 	// Iterate through neighbors
 	for (Regions::const_iterator it = neighbors.begin(); it != neighbors.end(); ++it)

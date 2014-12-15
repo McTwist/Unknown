@@ -93,9 +93,9 @@ class RegionNode : public AStarState<RegionNode>
 {
 public:
 	RegionNode();
-	RegionNode(Region * region);
+	RegionNode(const Region * region);
 	
-	Region * GetRegion() const;
+	const Region * GetRegion() const;
 	
 	float GoalDistanceEstimate(RegionNode & nodeGoal);
 	bool IsGoal(RegionNode & nodeGoal);
@@ -105,7 +105,7 @@ public:
 	
 private:
 	
-	Region * m_parent;
+	const Region * m_parent;
 };
 
 #endif // REGION_HPP

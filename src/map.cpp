@@ -191,7 +191,7 @@ std::vector<Region *> Map::FindBestWay(Region * start, Region * end)
 		RegionNode * region_node = astarsearch.GetSolutionStart();
 		do
 		{
-			regions.push_back(region_node->GetRegion());
+			regions.push_back(m_regions.at(region_node->GetRegion()->GetId()));
 			
 			region_node = astarsearch.GetSolutionNext();
 		}
