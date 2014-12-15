@@ -101,8 +101,10 @@ void Unknown::onGoPlaceArmies(float time)
 		
 		// Copy to prevent modificatio of source
 		Regions aff(affected);
+		// Sort depending on super region priority
+		std::sort(aff.begin(), aff.end(), compare_region_super_region_priority);
 		// Sort depending on army differences
-		std::sort(aff.begin(), aff.end(), compare_region_neighbor_army_diff);
+		std::stable_sort(aff.begin(), aff.end(), compare_region_neighbor_army_diff);
 		for (Regions::iterator it = aff.begin(); it != aff.end(); ++it)
 		{
 			region = *it;
@@ -242,7 +244,7 @@ void Unknown::onGoPlaceArmies(float time)
 		// Go through the list, placing the last armies
 		#if 0
 		Regions::iterator it = place.begin();
-		for (int i = m_armies; i > 0; --i)
+		while (m_armies > 0)
 		{
 			region = *it;
 			// Add one to each region
@@ -257,6 +259,28 @@ void Unknown::onGoPlaceArmies(float time)
 		if (!place.empty())
 			PlaceArmy(place.front(), m_armies);
 		#endif
+	}
+	
+	// Just to ensure everything is placed
+	if (m_armies > 0)
+	{
+		// Get the front
+		if (!affected.empty())
+		{
+			Debug::Log("Had to place %d armies on %d.\n", m_armies, affected.front()->GetId());
+			PlaceArmy(affected.front(), m_armies);
+		}
+		// Place randomly
+		else if (!m_regions.empty())
+		{
+			Debug::Log("Warn: Had to place %d armies on %d.\n", m_armies, m_regions.front()->GetId());
+			PlaceArmy(m_regions.front(), m_armies);
+		}
+		// Why did this happen?
+		else
+		{
+			Debug::Log("Error: Unable to place %d armies.\n", m_armies);
+		}
 	}
 	
 	SendPlaceArmies();
