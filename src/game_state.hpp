@@ -7,7 +7,7 @@
 class GameState
 {
 public:
-	virtual void onStartRound(int round) {}
+	virtual void onStartRound(int /*round*/) {}
 	virtual void onEndRound() {}
 };
 

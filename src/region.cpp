@@ -273,7 +273,7 @@ const Region * RegionNode::GetRegion() const
 
 // Get distance estimated
 // Note: This is currently not possible to estimate, so keep it at one.
-float RegionNode::GoalDistanceEstimate(RegionNode & nodeGoal)
+float RegionNode::GoalDistanceEstimate(RegionNode & /*nodeGoal*/)
 {
 	return 1.0f;
 }

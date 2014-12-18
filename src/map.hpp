@@ -22,12 +22,12 @@ public:
 	void ClearState();
 	
 	// Get
-	SuperRegion * GetSuperRegion(int id);
-	Region * GetRegion(int id);
+	SuperRegion * GetSuperRegion(int id) const;
+	Region * GetRegion(int id) const;
 	
 	// Locate best way towards a common goal
-	std::vector<Region *> FindBestWay(Region * start, Region * end);
-	std::vector<Region *> FindClosestRegion(Region * start, const std::set<Region *> &);
+	std::vector<Region *> FindBestWay(const Region * start, const Region * end) const;
+	std::vector<Region *> FindClosestRegion(Region * start, const std::set<Region *> &) const;
 	
 protected:
 	
@@ -37,7 +37,6 @@ protected:
 	void onSetupMapNeighbor(int region, const std::vector<int> & neighbors);
 	void onUpdateMap(int region, const std::string & name, int armies);
 	void onOpponentPlaceArmies(const std::string & name, int region, int amount);
-	void onOpponentAttackTransfer(const std::string & name, int source_region, int target_region,int amount);
 	
 	void onEndRound();
 	

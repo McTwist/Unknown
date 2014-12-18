@@ -6,15 +6,12 @@
 #include <vector>
 
 class Region;
+class SuperRegion;
 
 // Regions list
 typedef std::vector<Region *> Regions;
-//typedef Regions Neighbors;
 
 // Region
-
-// Create a definition to make the process easier
-typedef class SuperRegion * CSuperRegion;
 
 class Region
 {
@@ -26,13 +23,13 @@ public:
 	void AddNeighbor(Region * region);
 	const Regions & GetNeighbors() const;
 	
-	void SetSuperRegion(CSuperRegion CSuperRegion);
+	void SetSuperRegion(SuperRegion *);
 	void SetArmies(int armies);
 	void AddArmies(int armies);
 	void MoveArmies(int armies);
 	void SetOwner(class Bot * owner);
 	
-	CSuperRegion GetSuperRegion() const;
+	SuperRegion * GetSuperRegion() const;
 	int GetArmies() const;
 	int GetCurrentArmies() const;
 	class Bot * GetOwner() const;
@@ -67,7 +64,7 @@ private:
 	static void Unique(Regions & regions);
 	
 	int m_id;
-	CSuperRegion m_super_region;
+	SuperRegion * m_super_region;
 	int m_armies;
 	class Bot * m_owner;
 	

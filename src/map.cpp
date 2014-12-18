@@ -118,7 +118,7 @@ void Map::onUpdateMap(int region, const std::string & name, int armies)
 }
 
 // Place opponent armies
-void Map::onOpponentPlaceArmies(const std::string & name, int region, int amount)
+void Map::onOpponentPlaceArmies(const std::string & /*name*/, int region, int amount)
 {
 	RegionMap::iterator it = m_regions.find(region);
 	// Did not find a valid region
@@ -131,12 +131,6 @@ void Map::onOpponentPlaceArmies(const std::string & name, int region, int amount
 	reg->AddArmies(amount);
 }
 
-// Opponent attacks
-// Note: This currently does nothing and maybe will be removed
-void Map::onOpponentAttackTransfer(const std::string & name, int source_region, int target_region,int amount)
-{
-}
-
 // Ending round
 void Map::onEndRound()
 {
@@ -145,18 +139,18 @@ void Map::onEndRound()
 }
 
 // Get super region
-SuperRegion * Map::GetSuperRegion(int id)
+SuperRegion * Map::GetSuperRegion(int id) const
 {
-	SuperRegionMap::iterator it = m_super_regions.find(id);
+	SuperRegionMap::const_iterator it = m_super_regions.find(id);
 	if (it == m_super_regions.end())
 		return 0;
 	return it->second;
 }
 
 // Get region
-Region * Map::GetRegion(int id)
+Region * Map::GetRegion(int id) const
 {
-	RegionMap::iterator it = m_regions.find(id);
+	RegionMap::const_iterator it = m_regions.find(id);
 	if (it == m_regions.end())
 		return 0;
 	return it->second;
@@ -164,7 +158,7 @@ Region * Map::GetRegion(int id)
 
 // Find best way
 // Implemented as A*
-std::vector<Region *> Map::FindBestWay(Region * start, Region * end)
+std::vector<Region *> Map::FindBestWay(const Region * start, const Region * end) const
 {
 	typedef AStarSearch<RegionNode> Search;
 	Search astarsearch(m_regions.size());
@@ -233,7 +227,7 @@ typedef LinkedNode<Region *> LinkedRegion;
 
 // Find closest region from a range of regions
 // Implemented as breadth first
-std::vector<Region *> Map::FindClosestRegion(Region * start, const std::set<Region *> & regions)
+std::vector<Region *> Map::FindClosestRegion(Region * start, const std::set<Region *> & regions) const
 {
 	// Initialization of various variables
 	std::vector<LinkedRegion *> nodes;

@@ -4,10 +4,10 @@
 
 #include <map>
 
-// Super Region (Continent)
+class Region;
+class Bot;
 
-// Create a definition to make the process easier
-typedef class Region * CRegion;
+// Super Region (Continent)
 
 class SuperRegion
 {
@@ -18,16 +18,16 @@ public:
 	int GetBonus() const;
 	float GetPriority(unsigned int taken = 0) const;
 	
-	void AddRegion(CRegion region);
-	CRegion GetRegion(int id);
+	void AddRegion(Region * region);
+	Region * GetRegion(int id) const;
 	
-	int GetBotRegionCount(class Bot * bot);
+	int GetBotRegionCount(const Bot * bot) const;
 	
 private:
 	int m_id;
 	int m_bonus;
 
-	typedef std::map<int, CRegion> RegionMap;
+	typedef std::map<int, Region *> RegionMap;
 	
 	RegionMap m_regions;
 };

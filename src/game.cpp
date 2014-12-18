@@ -102,7 +102,7 @@ void Game::onSettingsOpponentBot(const std::string & name)
 
 // Start of game
 // Note: This relies on the underlying structure of Interpreter to be called first
-void Game::onSettingsStartingArmies(int amount)
+void Game::onSettingsStartingArmies(int /*amount*/)
 {
 	// End this round
 	if (m_round > 0)

@@ -377,7 +377,7 @@ void Interpreter::ReceiveCommand(const std::vector<std::string> & cmds)
 }
 
 // Convert to an another time
-float Interpreter::ConvertTime(int ms)
+float Interpreter::ConvertTime(int ms) const
 {
 	switch (m_time_mode)
 	{
