@@ -77,5 +77,32 @@ inline bool compare_region_super_region_priority(const Region * first, const Reg
 	// Sort
 	return first_prio > second_prio;
 }
+// Sort depending on super region and bot priority
+struct CompareBotSuperRegionPriority
+{
+	CompareBotSuperRegionPriority(Bot * b)
+	: bot(b)
+	{}
+	
+	Bot * bot;
+	
+	inline bool operator()(const Region * first, const Region * second)
+	{
+		// Get parent
+		SuperRegion * first_super = first->GetSuperRegion();
+		SuperRegion * second_super = second->GetSuperRegion();
+		
+		// Count connected region
+		int first_count = first_super->GetBotRegionCount(bot);
+		int second_count = second_super->GetBotRegionCount(bot);
+		
+		// Calculate priority
+		float first_prio = first_super->GetPriority(first_count);
+		float second_prio = second_super->GetPriority(second_count);
+		
+		// Sort
+		return first_prio > second_prio;
+	}
+};
 
 #endif // STL_SORT_HPP
