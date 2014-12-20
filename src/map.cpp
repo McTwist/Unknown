@@ -217,10 +217,29 @@ template<class T>
 struct LinkedNode
 {
 	LinkedNode(T n, LinkedNode<T> * p)
-	: node(n), parent(p)
+	: node(n), parent(p), depth(p ? p->depth+1 : 0)
 	{}
 	T node;
 	LinkedNode<T> * parent;
+	int depth;
+
+	// Look through nodes and find specific node
+	bool IsInList(T find_node)
+	{
+		LinkedNode<T> * that = this;
+		do
+		{
+			// Found it
+			if (that->node == find_node)
+				return true;
+			// Iterate
+			that = that->parent;
+		}
+		while (that);
+
+		// Did not find it
+		return false;
+	}
 };
 
 typedef LinkedNode<Region *> LinkedRegion;
@@ -292,6 +311,91 @@ Regions Map::FindClosestRegion(Region * start, const Regions & regions) const
 	for (std::vector<LinkedRegion *>::iterator it = nodes.begin(); it != nodes.end(); ++it)
 		delete *it;
 	return path;
+}
+
+// Locate closest regions from a range of regions
+// Note: This is really inefficient and allocated a lot of memory, but it's greedy enough to solve what needs to be solved
+std::vector<Regions> Map::FindClosestRegions(Region * start, const Regions & regions) const
+{
+	// Initialization of various variables
+	std::vector<LinkedRegion *> nodes;
+	std::queue<LinkedRegion *> queue;
+	std::set<Region *> regions_set(regions.begin(), regions.end());
+	std::vector<LinkedRegion *> final_nodes;
+	LinkedRegion * parent_node = 0;
+	LinkedRegion * temp = 0;
+	Region * region = 0;
+	int depth = 0;
+	
+	// Add first one
+	temp = new LinkedRegion(start, 0);
+	nodes.push_back(temp);
+	queue.push(temp);
+	
+	// Continue as long as there is more
+	while (!queue.empty())
+	{
+		// Get next node
+		parent_node = queue.front();
+		queue.pop();
+		region = parent_node->node;
+		
+		// Check if finished
+		if (regions_set.find(region) != regions_set.end())
+		{
+			final_nodes.push_back(parent_node);
+			depth = parent_node->depth;
+			continue;
+		}
+		// Reached deepend depth, so ignore everything else from now on
+		else if (depth <= parent_node->depth)
+		{
+			continue;
+		}
+		
+		// Append all neighbors
+		const Regions & neighbors = region->GetNeighbors();
+		for (Regions::const_iterator it = neighbors.begin(); it != neighbors.end(); ++it)
+		{
+			region = *it;
+
+			// Avoid going back
+			if (parent_node->IsInList(region))
+			{
+				temp = new LinkedRegion(region, parent_node);
+				nodes.push_back(temp);
+				queue.push(temp);
+			}
+		}
+	}
+
+	// Add everything together
+	std::vector<Regions> paths;
+
+	paths.reserve(final_nodes.size());
+	
+	for (std::vector<LinkedRegion *>::iterator it = final_nodes.begin(); it != final_nodes.end(); ++it)
+	{
+		Regions path;
+		temp = *it;
+		// Reserve
+		path.reserve(temp->depth+1);
+		// Iterate through final result
+		while (temp)
+		{
+			path.push_back(temp->node);
+			temp = temp->parent;
+		}
+		// Correct order
+		std::reverse(path.begin(), path.end());
+		// Add to list
+		paths.push_back(path);
+	}
+	
+	// Deallocate
+	for (std::vector<LinkedRegion *>::iterator it = nodes.begin(); it != nodes.end(); ++it)
+		delete *it;
+	return paths;
 }
 
 // Allocation

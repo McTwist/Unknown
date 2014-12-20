@@ -28,6 +28,7 @@ public:
 	// Locate best way towards a common goal
 	Regions FindBestWay(const Region * start, const Region * end) const;
 	Regions FindClosestRegion(Region * start, const Regions & regions) const;
+	std::vector<Regions> FindClosestRegions(Region * start, const Regions & regions) const;
 	
 protected:
 	
