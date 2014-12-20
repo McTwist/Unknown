@@ -433,7 +433,7 @@ void Unknown::onGoAttackTransfer(float time)
 
 					// Add the rest
 					Regions::iterator nt = attack.begin();
-					while (region->GetArmies() > 0)
+					while (region->GetArmies() > 1)
 					{
 						attack_region = *nt;
 						// Add one to each region
@@ -552,6 +552,9 @@ void Unknown::onStartRound(int round)
 // Note: More checks could be made
 void Unknown::PlaceArmy(Region * region, int amount)
 {
+	// Don't even dare go there
+	if (amount > m_armies)
+		amount = m_armies;
 	// Add to other placements
 	m_placement[region->GetId()] += amount;
 	// Add armies on this one
@@ -565,21 +568,20 @@ void Unknown::PlaceArmy(Region * region, int amount)
 // Note: More checks could be made
 void Unknown::MoveArmy(Region * source, Region * target, int amount)
 {
-	// Add to other movements
-	m_moves[std::make_pair(source->GetId(), target->GetId())] += amount;
+	// Don't go too big
+	if (amount >= source->GetArmies())
+		amount = source->GetArmies() - 1;
 	// Move temporary armies here
 	source->MoveArmies(amount);
-	// Add into attacked region
-	m_to_regions[target->GetId()] += amount;
+
+	// New system
+	m_movement.AddMovement(source, target, amount);
 }
 
 // Gets how much is attacked on a single region
 int Unknown::GetAttackRegion(const Region * region) const
 {
-	AttackRegionList::const_iterator it = m_to_regions.find(region->GetId());
-	if (it == m_to_regions.end())
-		return 0;
-	return it->second;
+	return m_movement.GetArmiesToRegion(region);
 }
 
 // Sends placement results to engine
@@ -606,19 +608,19 @@ void Unknown::SendPlaceArmies()
 void Unknown::SendAttackTransfer()
 {
 	// Nothing decided, do nothing
-	if (m_moves.empty())
+	if (m_movement.GetMovements().empty())
 		NoMoves();
 	// Move everything
 	else
 	{
-		for (MovementList::iterator it = m_moves.begin(); it != m_moves.end(); ++it)
-			AttackTransfer(GetName(), it->first.first, it->first.second, it->second);
+		const Movements & movements = m_movement.GetMovements();
+		for (Movements::const_iterator it = movements.begin(); it != movements.end(); ++it)
+			AttackTransfer(GetName(), it->from->GetId(), it->to->GetId(), it->armies);
 	}
 	
 	// And flush
 	Send();
 	
-	// Clear it
-	m_moves.clear();
-	m_to_regions.clear();
+	// Reset previous moves
+	m_movement.Reset();
 }
