@@ -227,12 +227,13 @@ typedef LinkedNode<Region *> LinkedRegion;
 
 // Find closest region from a range of regions
 // Implemented as breadth first
-std::vector<Region *> Map::FindClosestRegion(Region * start, const std::set<Region *> & regions) const
+Regions Map::FindClosestRegion(Region * start, const Regions & regions) const
 {
 	// Initialization of various variables
 	std::vector<LinkedRegion *> nodes;
 	std::queue<LinkedRegion *> queue;
 	std::set<Region *> explored;
+	std::set<Region *> regions_set(regions.begin(), regions.end());
 	LinkedRegion * final_node = 0;
 	LinkedRegion * parent_node = 0;
 	LinkedRegion * temp = 0;
@@ -253,7 +254,7 @@ std::vector<Region *> Map::FindClosestRegion(Region * start, const std::set<Regi
 		region = parent_node->node;
 		
 		// Check if finished
-		if (regions.find(region) != regions.end())
+		if (regions_set.find(region) != regions_set.end())
 		{
 			final_node = parent_node;
 			break;
@@ -276,7 +277,7 @@ std::vector<Region *> Map::FindClosestRegion(Region * start, const std::set<Regi
 	}
 	
 	// Final path
-	std::vector<Region *> path;
+	Regions path;
 	
 	// Iterate through final result
 	while (final_node)

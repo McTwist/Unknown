@@ -434,7 +434,7 @@ void Unknown::onGoAttackTransfer(float time)
 		// to best position depending on enemy
 		// An another strategy to add is to make sure armies are also split up more
 		// effectively towards multiple goals
-		// Keep in mine that splitting up an army is mostly a bad idea due to the
+		// Keep in mind that splitting up an army is mostly a bad idea due to the
 		// randomness in this engine
 		region = *it;
 		// Get connected regions
@@ -443,8 +443,7 @@ void Unknown::onGoAttackTransfer(float time)
 		Regions use = Region::GetDifferenceUnsorted(landmass, inner);
 		// Find closest regions for this landmass
 		// Note: Should return multiple paths to weight down moving only to lower count region(Or keep it as it is, a neat "feature")
-		std::vector<Region *> path = g_game->GetMap()->FindClosestRegion(
-			region, std::set<Region *>(use.begin(), use.end()));
+		std::vector<Region *> path = g_game->GetMap()->FindClosestRegion(region, use);
 			
 		// No path found (Should not happen, but is handled anyway)
 		if (path.empty())
@@ -479,6 +478,7 @@ void Unknown::onGoAttackTransfer(float time)
 // Starting the round
 void Unknown::onStartRound(int round)
 {
+	(void)round;
 	// Changing strategy depending on how long it has gone
 }
 
