@@ -433,7 +433,7 @@ void Unknown::onGoAttackTransfer(float time)
 
 					// Add the rest
 					Regions::iterator nt = attack.begin();
-					while (region->GetArmies() > 0)
+					while (region->GetArmies() > 1)
 					{
 						attack_region = *nt;
 						// Add one to each region
@@ -552,6 +552,9 @@ void Unknown::onStartRound(int round)
 // Note: More checks could be made
 void Unknown::PlaceArmy(Region * region, int amount)
 {
+	// Don't even dare go there
+	if (amount > m_armies)
+		amount = m_armies;
 	// Add to other placements
 	m_placement[region->GetId()] += amount;
 	// Add armies on this one
@@ -565,8 +568,9 @@ void Unknown::PlaceArmy(Region * region, int amount)
 // Note: More checks could be made
 void Unknown::MoveArmy(Region * source, Region * target, int amount)
 {
-	// Add to other movements
-	m_moves[std::make_pair(source->GetId(), target->GetId())] += amount;
+	// Don't go too big
+	if (amount >= source->GetArmies())
+		amount = source->GetArmies() - 1;
 	// Move temporary armies here
 	source->MoveArmies(amount);
 
