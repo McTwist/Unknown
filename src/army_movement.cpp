@@ -29,7 +29,7 @@ void ArmyMovement::AddMovement(const Region * from, const Region * to, int armie
 {
 	Movements::iterator it = GetMovement(from, to);
 	// Append on old one
-	if (it == m_army_movement.end())
+	if (it != m_army_movement.end())
 	{
 		it->armies += armies;
 	}
