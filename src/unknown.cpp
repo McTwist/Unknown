@@ -161,33 +161,32 @@ void Unknown::onGoPlaceArmies(float time)
 		for (Regions::const_iterator it = neighbors.begin(); it != neighbors.end(); ++it)
 			check_neighbors.insert((*it)->GetSuperRegion());
 		
-		// Nameconvention: Derp?
 		std::set<SuperRegion *> 
 			// Super regions that you are on but do not own completely
-			super_regions_that_you_are_on_but_do_not_own_completely, 
+			contested_regions, 
 			// Super regions that you are neighbor with but are not on
-			super_regions_that_you_are_neighbor_with_but_are_not_on;
+			desired_neighbors;
 		// Get super regions already on that there is neighbors on (Don't own that super region)
 		std::set_intersection(
 			check_regions.begin(), check_regions.end(),
 			check_neighbors.begin(), check_neighbors.end(),
-			inserter(super_regions_that_you_are_on_but_do_not_own_completely, super_regions_that_you_are_on_but_do_not_own_completely.begin()));
+			inserter(contested_regions, contested_regions.begin()));
 		
 		// Regions to place on
 		Regions place;
 		
 		// Got whole super region(s)
 		// There is no neighbors on your super region
-		if (super_regions_that_you_are_on_but_do_not_own_completely.empty())
+		if (contested_regions.empty())
 		{
 			// Get super regions that are next to the ones you are on
 			std::set_difference(
 				check_neighbors.begin(), check_neighbors.end(),
 				check_regions.begin(), check_regions.end(),
-				inserter(super_regions_that_you_are_neighbor_with_but_are_not_on, super_regions_that_you_are_neighbor_with_but_are_not_on.begin()));
+				inserter(desired_neighbors, desired_neighbors.begin()));
 			
 			// Somehow you just destroyed the world...
-			if (super_regions_that_you_are_neighbor_with_but_are_not_on.empty())
+			if (desired_neighbors.empty())
 			{
 				// Note: If you ever get here, please validate the engine and try to fix it
 				Debug::Log("Error: You just took over the world!\n");
@@ -205,7 +204,7 @@ void Unknown::onGoPlaceArmies(float time)
 					{
 						region = *nt;
 						// Is on the super region
-						if (super_regions_that_you_are_neighbor_with_but_are_not_on.find(region->GetSuperRegion()) != super_regions_that_you_are_neighbor_with_but_are_not_on.end())
+						if (desired_neighbors.find(region->GetSuperRegion()) != desired_neighbors.end())
 							place.push_back(*it);
 					}
 				}
@@ -219,7 +218,7 @@ void Unknown::onGoPlaceArmies(float time)
 			{
 				region = *it;
 				// Check if on the super region
-				if (super_regions_that_you_are_on_but_do_not_own_completely.find(region->GetSuperRegion()) != super_regions_that_you_are_on_but_do_not_own_completely.end())
+				if (contested_regions.find(region->GetSuperRegion()) != contested_regions.end())
 				{
 					// Locate neighbors
 					const Regions & neigh = region->GetNeighbors();
@@ -392,20 +391,9 @@ void Unknown::onGoAttackTransfer(float time)
 					optimal = r;
 				}
 			}
-			//std::sort(neutrals.begin(), neutrals.end(), compare_region_super_region_priority);
-			
-			// TODO: Implement a split system
-			/*for (Regions::iterator nt = neutrals.begin(); nt != neutrals.end(); ++nt)
-			{
-				Region * r = *nt;
-				Regions reg = Bot::GetConnectedSuperRegion(r);
-				Debug::Log("PRIORITY: %d, %f(%d)\n", 
-					r->GetId(), 
-					r->GetSuperRegion()->GetPriority(reg.size()), 
-					reg.size());
-			}*/
-			
+
 			// Attack if enough power
+			// Note: This was set to 1.5 in previous project. Probably not needed now when the luck factor is so low.
 			if (Region::CalculateAttackProbability(region, optimal) > 1.0f)
 			{
 				// Note: How many armies moved should be changed later on

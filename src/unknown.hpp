@@ -7,45 +7,6 @@
 #include "bot.hpp"
 #include "interpreter.hpp"
 
-struct PlacementMove
-{
-	PlacementMove(int r, int a)
-	: region(r), armies(a)
-	{}
-	int region;
-	int armies;
-};
-
-struct AttackTransferMove
-{
-	AttackTransferMove(int s, int t, int a)
-	: source(s), target(t), armies(a)
-	{}
-	int source;
-	int target;
-	int armies;
-};
-
-// Pairing together two regions
-/*template<typename T>
-struct DoublePair
-{
-	DoublePair(const T & f, const T & s)
-	: first(f), second(s)
-	{}
-	
-	bool operator<(const DoublePair & left, const DoublePair & right) const
-	{
-		if (left.first != right.first)
-			return left.first < right.first;
-		else
-			return left.second < right.second;
-	}
-	
-	const T first;
-	const T second;
-};*/
-
 // My bot
 
 class Unknown : public Bot, public Writer
