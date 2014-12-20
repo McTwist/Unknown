@@ -359,13 +359,16 @@ void Unknown::onGoAttackTransfer(float time)
 				stand_ground.insert(region);
 			}
 		}
+
+		// Prepare sorting algorithm
+		CompareBotSuperRegionPriority compare_regions_bot_priority(this);
+		
+		Region * attack_region = 0;
+
 		// Attack neutrals
 		for (Regions::iterator it = affective.begin(); it != affective.end(); ++it)
 		{
 			region = *it;
-			// Should not move
-			if (stand_ground.find(region) != stand_ground.end())
-				continue;
 			const Regions & neigh = region->GetNeighbors();
 			Regions neutrals = GetNeutralRegions(neigh);
 			int count = neutrals.size();
@@ -373,6 +376,79 @@ void Unknown::onGoAttackTransfer(float time)
 			if (count == 0)
 				continue;
 			
+			// Should probably not move
+			if (stand_ground.find(region) != stand_ground.end())
+			{
+				// Copied from previous project. Find out the real intention with it.
+				/*// Find out hostiles
+				Regions host = GetHostileRegions(neigh);
+				int defense_armies = Region::GetRegionsArmies(host) - host.size();
+				
+				// Sort for further use
+				std::sort(host.begin(), host.end(), compare_region_neighbor_army_diff);
+				
+				for (Regions::iterator nt = neutrals.begin(); nt != neutrals.end(); ++nt)
+				{
+					temp_region = *nt;
+					// Attack if enough power
+					// Note: Double attack power is used to ensure a success
+					if (Region::CalculateAttackProbability(region, temp_region) > 2.0f)
+					{
+						MoveArmy(region, temp_region, temp_region->GetArmies() * 2);
+					}
+				}*/
+				
+				continue;
+			}
+
+#if 1
+			// Sort the neutrals according to super region priority
+			std::sort(neutrals.begin(), neutrals.end(), compare_regions_bot_priority);
+
+			// Note: Fix this better later on
+			{
+				Regions attack;
+				// Come together
+				for (Regions::iterator nt = neutrals.begin(); nt != neutrals.end(); ++nt)
+				{
+					attack_region = *nt;
+					// Attack if enough power
+					// Note: Double attack power is used to ensure a success
+					if (Region::CalculateAttackProbability(region, attack_region) > 2.0f)
+					{
+						MoveArmy(region, attack_region, attack_region->GetArmies() * 2);
+						attack.push_back(attack_region);
+					}
+				}
+
+				// Add most of it
+				if (!attack.empty())
+				{
+					int share_armies = region->GetArmies() / attack.size();
+					for (Regions::iterator nt = attack.begin(); nt != attack.end(); ++nt)
+					{
+						attack_region = *nt;
+						MoveArmy(region, attack_region, share_armies);
+					}
+
+					// Add the rest
+					Regions::iterator nt = attack.begin();
+					while (region->GetArmies() > 0)
+					{
+						attack_region = *nt;
+						// Add one to each region
+						MoveArmy(region, attack_region, 1);
+						++nt;
+						// Go around
+						if (nt == attack.end())
+							nt = attack.begin();
+					}
+				}
+			}
+
+#else
+
+			// Get amount of armies around the region
 			Region * optimal = neutrals.front();
 			float opt_max = 0;
 			
@@ -399,6 +475,7 @@ void Unknown::onGoAttackTransfer(float time)
 				// Note: How many armies moved should be changed later on
 				MoveArmy(region, optimal, region->GetArmies()-1);
 			}
+#endif
 		}
 	}
 	
