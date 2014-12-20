@@ -35,6 +35,7 @@ public:
 	Regions GetNeutralRegions(const Regions & regions) const;
 	static Regions GetConnectedRegions(const Region * region);
 	static Regions GetConnectedSuperRegion(const Region * region);
+	static Regions GetFrontline(Region * region);
 	
 	// Clear current bot state
 	void ClearState();

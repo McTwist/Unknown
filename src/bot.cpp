@@ -262,6 +262,105 @@ Regions Bot::GetConnectedSuperRegion(const Region * start)
 	return regions;
 }
 
+// Get frontline from a region
+// Note: Currently does not work. Hard to implement, btw...
+Regions Bot::GetFrontline(Region * start)
+{
+	Region * region = 0;
+	Bot * bot = start->GetOwner();
+	Bot * neutral = g_game->GetNeutral();
+	Regions frontline;
+	std::queue<Region *> queue;
+
+	// First node
+	queue.push(start);
+
+	// Find the frontline
+	while (!queue.empty())
+	{
+		region = queue.front();
+		queue.pop();
+
+		// Add it here to avoid confusion
+		frontline.push_back(region);
+
+		const Regions & neighbors = region->GetNeighbors();
+		for (Regions::const_iterator it = neighbors.begin(); it != neighbors.end(); ++it)
+		{
+			region = *it;
+			// Neutral, so ignore it
+			if (region->GetOwner() == neutral)
+				continue;
+
+			// Check if already explored, and ignore it
+			if (find(frontline.begin(), frontline.end(), region) != frontline.end())
+				continue;
+
+			// Get neighbors neighbors
+			const Regions & neighbors_neighbors = region->GetNeighbors();
+
+			// You own it
+			if (region->GetOwner() == bot)
+			{
+				// Get enemy regions
+				//Regions enemy_regions = bot->GetHostileRegions(frontline);
+				Region * temp = 0;
+				for (Regions::const_iterator at = neighbors_neighbors.begin(); at != neighbors_neighbors.end(); ++at)
+				{
+					temp = *at;
+					// No region we should go through here
+					if (temp->GetOwner() == bot || temp->GetOwner() == neutral)
+						continue;
+
+					// Get neighbors that are same to each other
+					Regions same = Region::GetSameNeighbors(region, temp);
+					if (same.empty())
+						continue;
+
+					// Get regions that are connected to enemy regions
+					same = Region::GetIntersectionUnsorted(same, frontline);
+
+					// They are not neighbors
+					if (same.empty())
+						continue;
+					
+					// Add it for an another check
+					queue.push(region);
+				}
+			}
+			// Other owns it
+			else
+			{
+				Region * temp = 0;
+				for (Regions::const_iterator at = neighbors_neighbors.begin(); at != neighbors_neighbors.end(); ++at)
+				{
+					temp = *at;
+					// Owned by himself
+					if (temp->GetOwner() == region->GetOwner())
+						continue;
+
+					// Get neighbors that are same to each other
+					Regions same = Region::GetSameNeighbors(region, temp);
+					if (same.empty())
+						continue;
+
+					// Get regions that are connected to enemy regions
+					same = Region::GetIntersectionUnsorted(same, frontline);
+
+					// They are not neighbors
+					if (same.empty())
+						continue;
+
+					// Add it for an another check
+					queue.push(region);
+				}
+			}
+		}
+	}
+
+	return frontline;
+}
+
 // Clear current state for regions
 void Bot::ClearState()
 {
