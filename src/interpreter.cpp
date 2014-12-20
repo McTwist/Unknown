@@ -144,7 +144,7 @@ void Interpreter::SendMessage(const std::string & msg)
 	std::cout << std::flush; // Flush the buffer
 }
 
-// Recieve commands
+// Receive commands
 void Interpreter::ReceiveCommand(const std::vector<std::string> & cmds)
 {
 	int size = cmds.size();
@@ -213,6 +213,18 @@ void Interpreter::ReceiveCommand(const std::vector<std::string> & cmds)
 				for (it = m_readers.begin(); it != m_readers.end(); ++it)
 					(*it)->onSetupMapWasteland(region);
 			}
+		}
+		// setup_map opponent_starting_regions [-i ...]
+		else if (setup == "opponent_starting_regions")
+		{
+			// Avoid crash
+			if (size < 2)
+				return;
+			std::vector<int> regions = atoi(std::vector<std::string>(cmds.begin()+2, cmds.end()));
+
+			// Send in the data
+			for (it = m_readers.begin(); it != m_readers.end(); ++it)
+				(*it)->onSetupMapOpponentStartingRegions(regions);
 		}
 		else
 		{
@@ -296,6 +308,18 @@ void Interpreter::ReceiveCommand(const std::vector<std::string> & cmds)
 			// Send in the data
 			for (it = m_readers.begin(); it != m_readers.end(); ++it)
 				(*it)->onSettingsStartingArmies(amount);
+		}
+		// settings starting_regions [-i ...]
+		else if (settings == "starting_regions")
+		{
+			// Avoid crash
+			if (size < 2)
+				return;
+			std::vector<int> regions = atoi(std::vector<std::string>(cmds.begin()+2, cmds.end()));
+
+			// Send in the data
+			for (it = m_readers.begin(); it != m_readers.end(); ++it)
+				(*it)->onSettingsStartingRegions(regions);
 		}
 		else
 		{

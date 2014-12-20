@@ -20,6 +20,7 @@ protected:
 	virtual void onSetupMapRegion(int /*region*/, int /*super_region*/) {}
 	virtual void onSetupMapNeighbor(int /*region*/, const std::vector<int> & /*neighbors*/) {}
 	virtual void onSetupMapWasteland(int /*region*/) {}
+	virtual void onSetupMapOpponentStartingRegions(const std::vector<int> & /*regions*/) {}
 	virtual void onPickStartingRegions(float /*time*/, const std::vector<int> & /*regions*/) {}
 	virtual void onPickStartingRegion(float /*time*/, const std::vector<int> & /*regions*/) {}
 	virtual void onSettingsTimebank(float /*time*/) {}
@@ -28,6 +29,7 @@ protected:
 	virtual void onSettingsYourBot(const std::string & /*name*/) {}
 	virtual void onSettingsOpponentBot(const std::string & /*name*/) {}
 	virtual void onSettingsStartingArmies(int /*amount*/) {}
+	virtual void onSettingsStartingRegions(const std::vector<int> & /*regions*/) {}
 	virtual void onUpdateMap(int /*region*/, const std::string & /*name*/, int /*armies*/) {}
 	virtual void onOpponentPlaceArmies(const std::string & /*name*/, int /*region*/, int /*amount*/) {}
 	virtual void onOpponentAttackTransfer(const std::string & /*name*/, int /*source_region*/, int /*target_region*/, int /*amount*/) {}
