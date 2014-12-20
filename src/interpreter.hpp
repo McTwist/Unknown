@@ -87,6 +87,7 @@ protected:
 	void SendMessage(const std::string &);
 	
 	void ReceiveCommand(const std::vector<std::string> & cmd);
+	void HandleUnknownCommand(const std::vector<std::string> & cmd);
 	
 	float ConvertTime(int ms) const;
 	

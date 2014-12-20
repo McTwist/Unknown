@@ -214,6 +214,10 @@ void Interpreter::ReceiveCommand(const std::vector<std::string> & cmds)
 					(*it)->onSetupMapWasteland(region);
 			}
 		}
+		else
+		{
+			HandleUnknownCommand(cmds);
+		}
 	}
 	// pick_starting_regions -t [-i ...]
 	else if (cmd == "pick_starting_regions")
@@ -293,6 +297,10 @@ void Interpreter::ReceiveCommand(const std::vector<std::string> & cmds)
 			for (it = m_readers.begin(); it != m_readers.end(); ++it)
 				(*it)->onSettingsStartingArmies(amount);
 		}
+		else
+		{
+			HandleUnknownCommand(cmds);
+		}
 	}
 	// update_map [-i -b -i ...]	
 	else if (cmd == "update_map")
@@ -349,6 +357,10 @@ void Interpreter::ReceiveCommand(const std::vector<std::string> & cmds)
 				
 				i += 5;
 			}
+			else
+			{
+				HandleUnknownCommand(cmds);
+			}
 		}
 	}
 	else if (cmd == "go")
@@ -373,7 +385,30 @@ void Interpreter::ReceiveCommand(const std::vector<std::string> & cmds)
 			for (it = m_readers.begin(); it != m_readers.end(); ++it)
 				(*it)->onGoAttackTransfer(time);
 		}
+		else
+		{
+			HandleUnknownCommand(cmds);
+		}
 	}
+	else
+	{
+		HandleUnknownCommand(cmds);
+	}
+}
+
+// Handle command that is unknown
+void Interpreter::HandleUnknownCommand(const std::vector<std::string> & cmd)
+{
+	std::stringstream str;
+	str << "Unable to handle unknown command:";
+	for (std::vector<std::string>::const_iterator it = cmd.begin(); it != cmd.end(); ++it)
+	{
+		str << *it << " ";
+	}
+	str << "\n";
+	std::string result = str.str();
+	// Log it for further use
+	Debug::Log(result.c_str());
 }
 
 // Convert to an another time
