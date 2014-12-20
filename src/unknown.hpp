@@ -41,16 +41,9 @@ private:
 	
 	// desc<region, armies>
 	typedef std::map<int, int> PlacementList;
-	// desc<source, target, armies>
-	typedef std::pair<int, int> Destination;
-	typedef std::map<Destination, int> MovementList;
-	// desc<region, armies>
-	typedef std::map<int, int> AttackRegionList;
 	
 	// Current moves
 	PlacementList m_placement;
-	MovementList m_moves;
-	AttackRegionList m_to_regions;
 
 	// Advanced movement handler
 	ArmyMovement m_movement;

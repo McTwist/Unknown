@@ -569,8 +569,6 @@ void Unknown::MoveArmy(Region * source, Region * target, int amount)
 	m_moves[std::make_pair(source->GetId(), target->GetId())] += amount;
 	// Move temporary armies here
 	source->MoveArmies(amount);
-	// Add into attacked region
-	m_to_regions[target->GetId()] += amount;
 
 	// New system
 	m_movement.AddMovement(source, target, amount);
@@ -579,12 +577,7 @@ void Unknown::MoveArmy(Region * source, Region * target, int amount)
 // Gets how much is attacked on a single region
 int Unknown::GetAttackRegion(const Region * region) const
 {
-	AttackRegionList::const_iterator it = m_to_regions.find(region->GetId());
-	if (it == m_to_regions.end())
-		return 0;
-	return it->second;
-	// New system
-	//return m_movement.GetArmiesToRegion(region);
+	return m_movement.GetArmiesToRegion(region);
 }
 
 // Sends placement results to engine
@@ -611,25 +604,18 @@ void Unknown::SendPlaceArmies()
 void Unknown::SendAttackTransfer()
 {
 	// Nothing decided, do nothing
-	if (m_moves.empty())
+	if (m_movement.GetMovements().empty())
 		NoMoves();
 	// Move everything
 	else
 	{
-		for (MovementList::iterator it = m_moves.begin(); it != m_moves.end(); ++it)
-			AttackTransfer(GetName(), it->first.first, it->first.second, it->second);
-		// New system
-		//const Movements & movements = m_movement.GetMovements();
-		//for (Movements::const_iterator it = movements.begin(); it != movements.end(); ++it)
-		//	AttackTransfer(GetName(), it->from->GetId(), it->to->GetId(), it->armies);
+		const Movements & movements = m_movement.GetMovements();
+		for (Movements::const_iterator it = movements.begin(); it != movements.end(); ++it)
+			AttackTransfer(GetName(), it->from->GetId(), it->to->GetId(), it->armies);
 	}
 	
 	// And flush
 	Send();
-	
-	// Clear it
-	m_moves.clear();
-	m_to_regions.clear();
 	
 	// Reset previous moves
 	m_movement.Reset();
