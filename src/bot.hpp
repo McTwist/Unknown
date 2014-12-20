@@ -26,6 +26,7 @@ public:
 	int GetTotalArmyAttackPower() const;
 	
 	// Get regions
+	Regions GetRegions() const;
 	Regions GetNeighbors() const;
 	Regions GetAffectedRegions() const;
 	Regions GetUnaffectedRegions() const;
@@ -35,6 +36,7 @@ public:
 	static Regions GetConnectedRegions(const Region * region);
 	static Regions GetConnectedSuperRegion(const Region * region);
 	
+	// Clear current bot state
 	void ClearState();
 	
 protected:

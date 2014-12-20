@@ -44,6 +44,12 @@ int Bot::GetTotalArmyAttackPower() const
 	return m_visible_armies - m_regions.size();
 }
 
+// Get the current regions that you own
+Regions Bot::GetRegions() const
+{
+	return m_regions;
+}
+
 // Get neigbors
 Regions Bot::GetNeighbors() const
 {
@@ -83,6 +89,9 @@ Regions Bot::GetNeighbors() const
 				check_list.insert(region);
 		}
 	}
+	// Reserve, boost
+	regions.reserve(check_list.size());
+
 	regions.assign(check_list.begin(), check_list.end());
 #endif
 	return regions;
@@ -263,7 +272,7 @@ void Bot::ClearState()
 void Bot::onUpdateMap(int region, const std::string & name, int armies)
 {
 	// Check correct bot
-	if (m_name != name)
+	if (GetName() != name)
 		return;
 	
 	// Get region
