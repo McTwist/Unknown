@@ -6,6 +6,7 @@
 
 #include "bot.hpp"
 #include "interpreter.hpp"
+#include "army_movement.hpp"
 
 // My bot
 
@@ -50,6 +51,9 @@ private:
 	PlacementList m_placement;
 	MovementList m_moves;
 	AttackRegionList m_to_regions;
+
+	// Advanced movement handler
+	ArmyMovement m_movement;
 };
 
 #endif // UNKNOWN_HPP

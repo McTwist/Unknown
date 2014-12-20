@@ -494,6 +494,9 @@ void Unknown::MoveArmy(Region * source, Region * target, int amount)
 	source->MoveArmies(amount);
 	// Add into attacked region
 	m_to_regions[target->GetId()] += amount;
+
+	// New system
+	m_movement.AddMovement(source, target, amount);
 }
 
 // Gets how much is attacked on a single region
@@ -503,6 +506,8 @@ int Unknown::GetAttackRegion(const Region * region) const
 	if (it == m_to_regions.end())
 		return 0;
 	return it->second;
+	// New system
+	//return m_movement.GetArmiesToRegion(region);
 }
 
 // Sends placement results to engine
@@ -536,6 +541,10 @@ void Unknown::SendAttackTransfer()
 	{
 		for (MovementList::iterator it = m_moves.begin(); it != m_moves.end(); ++it)
 			AttackTransfer(GetName(), it->first.first, it->first.second, it->second);
+		// New system
+		//const Movements & movements = m_movement.GetMovements();
+		//for (Movements::const_iterator it = movements.begin(); it != movements.end(); ++it)
+		//	AttackTransfer(GetName(), it->from->GetId(), it->to->GetId(), it->armies);
 	}
 	
 	// And flush
@@ -544,4 +553,7 @@ void Unknown::SendAttackTransfer()
 	// Clear it
 	m_moves.clear();
 	m_to_regions.clear();
+	
+	// Reset previous moves
+	m_movement.Reset();
 }
