@@ -50,7 +50,13 @@ Regions Bot::GetRegions() const
 	return m_regions;
 }
 
-// Get neigbors
+// Get intersection of own regions
+Regions Bot::GetRegions(const Regions & regions) const
+{
+	return Region::GetIntersectionUnsorted(m_regions, regions);
+}
+
+// Get neighbors
 Regions Bot::GetNeighbors() const
 {
 	Regions regions;

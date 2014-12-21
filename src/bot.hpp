@@ -27,6 +27,7 @@ public:
 	
 	// Get regions
 	Regions GetRegions() const;
+	Regions GetRegions(const Regions & regions) const;
 	Regions GetNeighbors() const;
 	Regions GetAffectedRegions() const;
 	Regions GetUnaffectedRegions() const;
