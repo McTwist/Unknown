@@ -297,6 +297,10 @@ void Unknown::onGoAttackTransfer(float time)
 	timer.Start();
 	// Get neutral area bot
 	//Bot * neutral = g_game->GetNeutral();
+
+	// Strategy variables
+	// Chance for region to attack neutral regions
+	float neutral_army_attack = 1.5f;
 	
 	Region * region = 0;
 	
@@ -414,9 +418,9 @@ void Unknown::onGoAttackTransfer(float time)
 					attack_region = *nt;
 					// Attack if enough power
 					// Note: Double attack power is used to ensure a success
-					if (Region::CalculateAttackProbability(region, attack_region) > 2.0f)
+					if (Region::CalculateAttackProbability(region, attack_region) > neutral_army_attack)
 					{
-						MoveArmy(region, attack_region, attack_region->GetArmies() * 2);
+						MoveArmy(region, attack_region, attack_region->GetArmies() * neutral_army_attack);
 						attack.push_back(attack_region);
 					}
 				}
