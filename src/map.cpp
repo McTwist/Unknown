@@ -64,9 +64,7 @@ void Map::onSetupMapRegion(int region, int super_region)
 	m_regions.insert(std::make_pair(region, reg));
 	
 	// Add to super region
-	SuperRegion * sup = GetSuperRegion(super_region);
-	// ... but only if found one
-	if (sup)
+	if (SuperRegion * sup = GetSuperRegion(super_region))
 		sup->AddRegion(reg);
 }
 
@@ -96,6 +94,21 @@ void Map::onSetupMapNeighbor(int region, const std::vector<int> & neighbors)
 		reg->AddNeighbor(regb);
 		regb->AddNeighbor(reg);
 	}
+}
+
+// Setup wasteland
+void Map::onSetupMapWasteland(int region)
+{
+	RegionMap::iterator it = m_regions.find(region);
+	// Did not find a valid region
+	if (it == m_regions.end())
+		return;
+
+	Region * reg = it->second;
+
+	// Sate as wasteland
+	if (SuperRegion * sup = reg->GetSuperRegion())
+		sup->AddWasteland(reg);
 }
 
 // Update map status

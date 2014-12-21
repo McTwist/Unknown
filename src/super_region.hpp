@@ -3,8 +3,10 @@
 #define SUPER_REGION_HPP
 
 #include <map>
+#include <vector>
 
 class Region;
+typedef std::vector<Region *> Regions;
 class Bot;
 
 // Super Region (Continent)
@@ -20,6 +22,8 @@ public:
 	
 	void AddRegion(Region * region);
 	Region * GetRegion(int id) const;
+	void AddWasteland(Region * region);
+	void RemoveWasteland(Region * region);
 	
 	int GetBotRegionCount(const Bot * bot) const;
 	
@@ -30,6 +34,7 @@ private:
 	typedef std::map<int, Region *> RegionMap;
 	
 	RegionMap m_regions;
+	Regions m_wasteland;
 };
 
 #endif // SUPER_REGION_HPP

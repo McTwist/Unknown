@@ -25,7 +25,12 @@ int SuperRegion::GetBonus() const
 // Cost to get it could also be an extra addition to reduce priority
 float SuperRegion::GetPriority(unsigned int taken) const
 {
-	return (taken >= m_regions.size()) ? m_bonus : (float)m_bonus / (float)(m_regions.size() - taken);
+	int left = m_regions.size() - taken;
+	// Taken over priority
+	float priority = (taken >= m_regions.size()) ? m_bonus : (float)m_bonus / (float)left;
+	// Wasteland suffering
+	priority -= (float)m_wasteland.size() / (float)m_bonus;
+	return priority;
 }
 
 // Add region to super region
@@ -42,6 +47,18 @@ Region * SuperRegion::GetRegion(int id) const
 	if (it == m_regions.end())
 		return 0;
 	return it->second;
+}
+
+// Add wasteland to calculations
+void SuperRegion::AddWasteland(Region * region)
+{
+	m_wasteland.push_back(region);
+}
+
+// Remove active wasteland
+void SuperRegion::RemoveWasteland(Region * region)
+{
+	m_wasteland.erase(std::remove(m_wasteland.begin(), m_wasteland.end(), region), m_wasteland.end());
 }
 
 // Get amount of regions for a bot
