@@ -29,7 +29,7 @@ float SuperRegion::GetPriority(unsigned int taken) const
 	// Taken over priority
 	float priority = (taken >= m_regions.size()) ? m_bonus : (float)m_bonus / (float)left;
 	// Wasteland suffering
-	priority -= (float)m_wasteland.size() / (float)m_bonus;
+	priority -= (float)m_wasteland.size();
 	return priority;
 }
 
