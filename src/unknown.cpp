@@ -41,11 +41,24 @@ void Unknown::onPickStartingRegion(float time, const std::vector<int> & regions)
 	Timer timer;
 	timer.Start();
 	// Possible strategies:
-	// * Less neighbors (Chokepoint)
+	// * Less neighbors (Choke point)
 	// * Smaller super region (Bonus army)
 	// * Close regions (Better mobility)
 	// * Bigger super regions (Spread fast)
-	PickStartingRegion(regions.front());
+	// First version of making something somewhat when picking regions
+	int picked_region = regions.front();
+	{
+		Regions sorted;
+		sorted.reserve(regions.size());
+		for (std::vector<int>::const_iterator it = regions.begin(); it != regions.end(); ++it)
+		{
+			sorted.push_back(g_game->GetMap()->GetRegion(*it));
+		}
+		std::sort(sorted.begin(), sorted.end(), CompareBotSuperRegionPriority(this));
+		picked_region = sorted.front()->GetId();
+	}
+
+	PickStartingRegion(picked_region);
 	Send();
 	
 	float dt = timer.MilliSeconds();
