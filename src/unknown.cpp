@@ -340,6 +340,8 @@ void Unknown::onGoAttackTransfer(float time)
 			int armies = Region::GetRegionsArmies(host);
 			
 			std::sort(host.begin(), host.end(), compare_region_army);
+
+			Region * attack_region = host.front();
 			
 			// Note: Attack probability could change depending on several interactions
 			
@@ -348,14 +350,25 @@ void Unknown::onGoAttackTransfer(float time)
 			if (Region::CalculateAttackProbability(armies - count, region->GetArmies()) < 1.0f)
 			{
 				// Attack if enough power
-				if (Region::CalculateAttackProbability(region, host.front()) > 1.0f)
+				if (Region::CalculateAttackProbability(region, attack_region) > 1.0f)
 				{
 					// Note: How many armies moved should be changed later on
-					MoveArmy(region, host.front(), region->GetArmies()-1);
+					MoveArmy(region, attack_region, region->GetArmies() - 1);
 				}
 				else
 				{
-					stand_ground.insert(region);
+					// Get assistance
+					Regions assistance = GetRegions(attack_region->GetNeighbors());
+					int movement_armies =  Region::GetRegionsArmies(assistance) + m_movement.GetArmiesToRegion(attack_region);
+					// Attack if enough collaborated manpower
+					if (Region::CalculateAttackProbability(movement_armies - assistance.size(), attack_region->GetArmies()) > 2.0f)
+					{
+						MoveArmy(region, attack_region, region->GetArmies() - 1);
+					}
+					else
+					{
+						stand_ground.insert(region);
+					}
 				}
 			}
 			else
