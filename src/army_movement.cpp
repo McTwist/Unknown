@@ -44,6 +44,18 @@ void ArmyMovement::AddMovement(const Region * from, const Region * to, int armie
 	}
 }
 
+// Add new movement
+void ArmyMovement::AddMovement(const Movement & movement)
+{
+	AddMovement(movement.from, movement.to, movement.armies);
+}
+
+// Add a list of movements
+void ArmyMovement::AddMovements(const Movements & movements)
+{
+	m_army_movement.insert(m_army_movement.end(), movements.begin(), movements.end());
+}
+
 // Get current list of movements
 const Movements & ArmyMovement::GetMovements() const
 {
