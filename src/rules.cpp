@@ -12,7 +12,7 @@ int Rules::max_rounds = 100;
 bool Rules::fog_of_war = true;
 
 // Determines how battles luck are determined
-float Rules::luck = 1.0f;
+float Rules::luck = 0.16f;
 
 // How high probability an attack will destroy one defending army
 float Rules::chance_of_attack = 0.6f;
