@@ -41,6 +41,7 @@ public:
 	static Regions GetSameNeighbors(const Region * regionl, const Region * regionr);
 	static float CalculateAttackProbability(const Region * from, const Region * to);
 	static float CalculateAttackProbability(int from, int to);
+	static float CalculateAttackProbabilityWithLuck(int from, int to, float chance = 0.0f);
 	
 	// Multiple
 	static Regions GetCombine(const Regions & regionsl, const Regions & regionsr);

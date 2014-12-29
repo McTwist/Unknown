@@ -133,6 +133,23 @@ float Region::CalculateAttackProbability(int from, int to)
 	return (from  * Rules::chance_of_attack) / (to * Rules::chance_of_defense);
 }
 
+// Calculates the current attack probability with luck
+// Extra argument 'chance' tells how much extra chance there is to get most armies by luck
+float Region::CalculateAttackProbabilityWithLuck(int from, int to, float chance)
+{
+	// This should not happen, but is checked to avoid crash
+	if (to <= 0)
+		return 9000.1f;
+	// Calculate guarenteed values
+	float offence = from * Rules::chance_of_attack * (1.0f - Rules::luck);
+	float defence = to * Rules::chance_of_defense * (1.0f - Rules::luck);
+	// Random chance calculation
+	offence += from * Rules::luck * chance;
+	defence += to * Rules::luck * chance;
+	// Return the probability result
+	return offence / defence;
+}
+
 // Combine two lists
 Regions Region::GetCombine(const Regions & regionsl, const Regions & regionsr)
 {
