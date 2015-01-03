@@ -354,6 +354,7 @@ void Unknown::onGoAttackTransfer(float time)
 			
 			std::sort(host.begin(), host.end(), compare_region_army);
 
+			// The region that will be attacked
 			Region * attack_region = host.front();
 			
 			// Note: Attack probability could change depending on several interactions
@@ -409,24 +410,26 @@ void Unknown::onGoAttackTransfer(float time)
 			// Should probably not move
 			if (stand_ground.find(region) != stand_ground.end())
 			{
-				// Copied from previous project. Find out the real intention with it.
-				/*// Find out hostiles
+				// If in a pinch, but still enough armies, attack neutrals close by
+				// Find out hostiles
 				Regions host = GetHostileRegions(neigh);
+				// Calculate their strength
 				int defense_armies = Region::GetRegionsArmies(host) - host.size();
 				
 				// Sort for further use
-				std::sort(host.begin(), host.end(), compare_region_neighbor_army_diff);
+				//std::sort(host.begin(), host.end(), compare_region_neighbor_army_diff);
 				
 				for (Regions::iterator nt = neutrals.begin(); nt != neutrals.end(); ++nt)
 				{
-					temp_region = *nt;
-					// Attack if enough power
-					// Note: Double attack power is used to ensure a success
-					if (Region::CalculateAttackProbability(region, temp_region) > 2.0f)
+					attack_region = *nt;
+					int attack_armies = attack_region->GetArmies() * neutral_army_attack;
+					// Attack if enough power, but not if it might have affections towards our own army
+					if (Region::CalculateAttackProbability(region, attack_region) > neutral_army_attack &&
+						Region::CalculateAttackProbability(defense_armies, region->GetArmies() - attack_armies) <= 0.8f)
 					{
-						MoveArmy(region, temp_region, temp_region->GetArmies() * 2);
+						MoveArmy(region, attack_region, attack_armies);
 					}
-				}*/
+				}
 				
 				continue;
 			}
