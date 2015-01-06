@@ -112,22 +112,26 @@ void Map::onSetupMapWasteland(int region)
 }
 
 // Update map status
-void Map::onUpdateMap(int region, const std::string & name, int armies)
+void Map::onUpdateMap(int region_id, const std::string & name, int armies)
 {
-	RegionMap::iterator it = m_regions.find(region);
+	RegionMap::iterator it = m_regions.find(region_id);
 	// Did not find a valid region
 	if (it == m_regions.end())
 		return;
 	
-	Region * reg = it->second;
+	Region * region = it->second;
 	
 	// Update armies
-	reg->SetArmies(armies);
+	region->SetArmies(armies);
 	
-	Bot * bot = g_game->GetBot(name);
 	// Change only if valid
-	if (bot)
-		reg->SetOwner(bot);
+	if (Bot * bot = g_game->GetBot(name))
+	{
+		region->SetOwner(bot);
+		// Check wasteland
+		if (region->IsWasteland())
+			region->GetSuperRegion()->RemoveWasteland(region);
+	}
 }
 
 // Place opponent armies

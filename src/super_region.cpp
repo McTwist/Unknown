@@ -81,12 +81,14 @@ const SuperRegions & SuperRegion::GetNeighbors() const
 void SuperRegion::AddWasteland(Region * region)
 {
 	m_wasteland.push_back(region);
+	region->SetWasteland(true);
 }
 
 // Remove active wasteland
 void SuperRegion::RemoveWasteland(Region * region)
 {
 	m_wasteland.erase(std::remove(m_wasteland.begin(), m_wasteland.end(), region), m_wasteland.end());
+	region->SetWasteland(false);
 }
 
 // Get amount of regions for a bot
