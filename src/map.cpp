@@ -135,17 +135,17 @@ void Map::onUpdateMap(int region_id, const std::string & name, int armies)
 }
 
 // Place opponent armies
-void Map::onOpponentPlaceArmies(const std::string & /*name*/, int region, int amount)
+void Map::onOpponentPlaceArmies(const std::string & /*name*/, int region_id, int amount)
 {
-	RegionMap::iterator it = m_regions.find(region);
+	RegionMap::iterator it = m_regions.find(region_id);
 	// Did not find a valid region
 	if (it == m_regions.end())
 		return;
 	
-	Region * reg = it->second;
+	Region * region = it->second;
 	
 	// Update armies
-	reg->AddArmies(amount);
+	region->AddArmies(amount);
 }
 
 // Ending round
