@@ -12,6 +12,7 @@ Region::Region(int id)
 , m_armies(Rules::neutral_armies)
 , m_owner(0)
 , m_calculated_armies(0)
+, m_is_wasteland(false)
 {
 }
 
@@ -64,6 +65,12 @@ void Region::SetOwner(Bot * owner)
 	m_owner = owner;
 }
 
+// Set as a wasteland
+void Region::SetWasteland(bool wasteland)
+{
+	m_is_wasteland = wasteland;
+}
+
 // Get super region
 SuperRegion * Region::GetSuperRegion() const
 {
@@ -93,6 +100,12 @@ float Region::GetPriority() const
 {
 	// Note: Close super region, less neighbors, could increase this value
 	return 1.0f;
+}
+
+// Get if wasteland
+bool Region::IsWasteland() const
+{
+	return m_is_wasteland;
 }
 
 // Checks if two regions are neighbors

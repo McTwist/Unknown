@@ -23,17 +23,21 @@ public:
 	void AddNeighbor(Region * region);
 	const Regions & GetNeighbors() const;
 	
+	// Setters
 	void SetSuperRegion(SuperRegion *);
 	void SetArmies(int armies);
 	void AddArmies(int armies);
 	void MoveArmies(int armies);
 	void SetOwner(class Bot * owner);
+	void SetWasteland(bool wasteland);
 	
+	// Getters
 	SuperRegion * GetSuperRegion() const;
 	int GetArmies() const;
 	int GetCurrentArmies() const;
 	class Bot * GetOwner() const;
 	float GetPriority() const;
+	bool IsWasteland() const;
 	
 	// Checks
 	static bool IsNeighbor(const Region * regionl, const Region * regionr);
@@ -70,6 +74,7 @@ private:
 	class Bot * m_owner;
 	
 	int m_calculated_armies;
+	bool m_is_wasteland;
 	
 	Regions m_neighbors;
 };
