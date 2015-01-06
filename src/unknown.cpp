@@ -139,7 +139,7 @@ void Unknown::onGoPlaceArmies(float time)
 			if (Region::CalculateAttackProbability(region, effective.front()) < 1.0f)
 			{
 				// Calculate troops
-				int troops = m_armies * effective_troop_placer;
+				int troops = int(m_armies * effective_troop_placer);
 				// Check for errors
 				if (troops > m_armies)
 					troops = m_armies;
@@ -152,7 +152,7 @@ void Unknown::onGoPlaceArmies(float time)
 			if (effective_armies > region->GetArmies() - 1)
 			{
 				// Calculate troops
-				int troops = m_armies * effective_troop_placer;
+				int troops = int(m_armies * effective_troop_placer);
 				// Check for errors
 				if (troops > m_armies)
 					troops = m_armies;
@@ -422,7 +422,7 @@ void Unknown::onGoAttackTransfer(float time)
 				for (Regions::iterator nt = neutrals.begin(); nt != neutrals.end(); ++nt)
 				{
 					attack_region = *nt;
-					int attack_armies = attack_region->GetArmies() * neutral_army_attack;
+					int attack_armies = int(attack_region->GetArmies() * neutral_army_attack);
 					// Attack if enough power, but not if it might have affections towards our own army
 					if (Region::CalculateAttackProbability(region, attack_region) > neutral_army_attack &&
 						Region::CalculateAttackProbability(defense_armies, region->GetArmies() - attack_armies) <= 0.8f)
@@ -449,7 +449,7 @@ void Unknown::onGoAttackTransfer(float time)
 					// Note: Double attack power is used to ensure a success
 					if (Region::CalculateAttackProbability(region, attack_region) > neutral_army_attack)
 					{
-						MoveArmy(region, attack_region, attack_region->GetArmies() * neutral_army_attack);
+						MoveArmy(region, attack_region, int(attack_region->GetArmies() * neutral_army_attack));
 						attack.push_back(attack_region);
 					}
 				}
