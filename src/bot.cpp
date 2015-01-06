@@ -62,26 +62,6 @@ Regions Bot::GetNeighbors() const
 	Regions regions;
 	std::set<Region *> check_list;
 	Region * region;
-	// Two ways of adding to list
-#if 0
-	// Go through owning regions
-	for (Regions::const_iterator it = m_regions.begin(); it != m_regions.end(); ++it)
-	{
-		region = *it;
-		// Go through neighbors
-		const Regions & neighbors = region->GetNeighbors();
-		for (Regions::const_iterator at = neighbors.begin(); at != neighbors.end(); ++at)
-		{
-			region = *at;
-			// Check duplicates and ownership
-			if (region->GetOwner() != this && check_list.find(region) == check_list.end())
-			{
-				regions.push_back(region);
-				check_list.insert(region);
-			}
-		}
-	}
-#else
 	// Go through owning regions
 	for (Regions::const_iterator it = m_regions.begin(); it != m_regions.end(); ++it)
 	{
@@ -98,8 +78,9 @@ Regions Bot::GetNeighbors() const
 	// Reserve, boost
 	regions.reserve(check_list.size());
 
+	// Save to list
 	regions.assign(check_list.begin(), check_list.end());
-#endif
+
 	return regions;
 }
 
