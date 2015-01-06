@@ -25,9 +25,9 @@ int SuperRegion::GetBonus() const
 // Cost to get it could also be an extra addition to reduce priority
 float SuperRegion::GetPriority(unsigned int taken) const
 {
-	int left = m_regions.size() - taken;
+	int left = m_region_map.size() - taken;
 	// Taken over priority
-	float priority = (taken >= m_regions.size()) ? m_bonus : (float)m_bonus / (float)left;
+	float priority = (taken >= m_region_map.size()) ? m_bonus : (float)m_bonus / (float)left;
 	// Wasteland suffering
 	priority -= (float)m_wasteland.size();
 	return priority;
@@ -36,17 +36,45 @@ float SuperRegion::GetPriority(unsigned int taken) const
 // Add region to super region
 void SuperRegion::AddRegion(Region * region)
 {
-	m_regions.insert(std::make_pair(region->GetId(), region));
+	// Add to id list
+	m_region_map.insert(std::make_pair(region->GetId(), region));
+	// Add to region list
+	m_regions.push_back(region);
+	// Set the current super region
 	region->SetSuperRegion(this);
+	// Calculate super region neighbors
+	const Regions & neighbors = region->GetNeighbors();
+	for (Regions::const_iterator it = neighbors.begin(); it != neighbors.end(); ++it)
+	{
+		Region * neighbor = *it;
+		// Not itself and not added before
+		if (neighbor->GetSuperRegion() != this && 
+			std::find(m_neighbors.begin(), m_neighbors.end(), neighbor->GetSuperRegion()) == m_neighbors.end())
+		{
+			m_neighbors.push_back(neighbor->GetSuperRegion());
+		}
+	}
 }
 
 // Get region if it exists
 Region * SuperRegion::GetRegion(int id) const
 {
-	RegionMap::const_iterator it = m_regions.find(id);
-	if (it == m_regions.end())
+	RegionMap::const_iterator it = m_region_map.find(id);
+	if (it == m_region_map.end())
 		return 0;
 	return it->second;
+}
+
+// Get regions in the super region
+const Regions & SuperRegion::GetRegions() const
+{
+	return m_regions;
+}
+
+// Get super region neighbors
+const SuperRegions & SuperRegion::GetNeighbors() const
+{
+	return m_neighbors;
 }
 
 // Add wasteland to calculations
@@ -65,8 +93,8 @@ void SuperRegion::RemoveWasteland(Region * region)
 int SuperRegion::GetBotRegionCount(const Bot * bot) const
 {
 	int count = 0;
-	for (RegionMap::const_iterator it = m_regions.begin(); it != m_regions.end(); ++it)
-		if (it->second->GetOwner() == bot)
+	for (Regions::const_iterator it = m_regions.begin(); it != m_regions.end(); ++it)
+		if ((*it)->GetOwner() == bot)
 			++count;
 	return count;
 }

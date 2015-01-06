@@ -6,8 +6,10 @@
 #include <vector>
 
 class Region;
+class SuperRegion;
 typedef std::vector<Region *> Regions;
 class Bot;
+typedef std::vector<SuperRegion *> SuperRegions;
 
 // Super Region (Continent)
 
@@ -22,6 +24,8 @@ public:
 	
 	void AddRegion(Region * region);
 	Region * GetRegion(int id) const;
+	const Regions & GetRegions() const;
+	const SuperRegions & GetNeighbors() const;
 	void AddWasteland(Region * region);
 	void RemoveWasteland(Region * region);
 	
@@ -33,8 +37,10 @@ private:
 
 	typedef std::map<int, Region *> RegionMap;
 	
-	RegionMap m_regions;
+	RegionMap m_region_map;
+	Regions m_regions;
 	Regions m_wasteland;
+	SuperRegions m_neighbors;
 };
 
 #endif // SUPER_REGION_HPP
