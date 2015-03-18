@@ -321,6 +321,14 @@ void Interpreter::ReceiveCommand(const std::vector<std::string> & cmds)
 			for (it = m_readers.begin(); it != m_readers.end(); ++it)
 				(*it)->onSettingsStartingRegions(regions);
 		}
+		// settings starting_pick_amount -i
+		else if (settings == "starting_pick_amount")
+		{
+			int amount = atoi(cmds[2].c_str());
+			// Send in the data
+			for (it = m_readers.begin(); it != m_readers.end(); ++it)
+				(*it)->onSettingsStartingPickAmount(amount);
+		}
 		else
 		{
 			HandleUnknownCommand(cmds);
