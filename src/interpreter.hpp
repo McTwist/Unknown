@@ -30,6 +30,7 @@ protected:
 	virtual void onSettingsOpponentBot(const std::string & /*name*/) {}
 	virtual void onSettingsStartingArmies(int /*amount*/) {}
 	virtual void onSettingsStartingRegions(const std::vector<int> & /*regions*/) {}
+	virtual void onSettingsStartingPickAmount(int /*amount*/) {}
 	virtual void onUpdateMap(int /*region*/, const std::string & /*name*/, int /*armies*/) {}
 	virtual void onOpponentPlaceArmies(const std::string & /*name*/, int /*region*/, int /*amount*/) {}
 	virtual void onOpponentAttackTransfer(const std::string & /*name*/, int /*source_region*/, int /*target_region*/, int /*amount*/) {}
