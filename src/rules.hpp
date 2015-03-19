@@ -16,6 +16,7 @@ public:
 	
 	// These rules are applies depending on several factors
 	static int neutral_armies;
+	static int wasteland_armies;
 };
 
 #endif // RULES_HPP

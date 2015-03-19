@@ -5,7 +5,7 @@
  * More can be added as complicated moves are developed
  */
 
-// How many rounds before a draw is occured
+// How many rounds before a draw is occurred
 int Rules::max_rounds = 100;
 
 // Whether or not a fog of war is applied to the map
@@ -22,3 +22,6 @@ float Rules::chance_of_defense = 0.7f;
 
 // How many armies neutral regions have at start
 int Rules::neutral_armies = 2; // Default: 2
+
+// How many armies wasteland regions have at start
+int Rules::wasteland_armies = 6;
