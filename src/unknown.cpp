@@ -25,7 +25,21 @@ void Unknown::onPickStartingRegions(float time, const std::vector<int> & regions
 	// * Smaller super region (Bonus army)
 	// * Close regions (Better mobility)
 	// * Bigger super regions (Spread fast)
-	std::vector<int> ret(regions.begin(), regions.begin() + 6);
+	// Copied from below
+	std::vector<int> ret;
+	{
+		Regions sorted;
+		sorted.reserve(regions.size());
+		for (std::vector<int>::const_iterator it = regions.begin(); it != regions.end(); ++it)
+		{
+			sorted.push_back(g_game->GetMap()->GetRegion(*it));
+		}
+		std::sort(sorted.begin(), sorted.end(), CompareBotSuperRegionPriority(this));
+		for (unsigned int i = 0; i < 6 && i < sorted.size(); ++i)
+		{
+			ret.push_back(sorted[i]->GetId());
+		}
+	}
 	SetStartingRegions(ret);
 	Send();
 	
