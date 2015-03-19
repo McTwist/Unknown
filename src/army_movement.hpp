@@ -29,6 +29,9 @@ public:
 	void AddMovement(const Region * from, const Region * to, int armies);
 	void AddMovement(const Movement & movement);
 	void AddMovements(const Movements & movements);
+	
+	// Remove movement
+	void RemoveMovement(const Region * from, const Region * to);
 
 	// Get list of movement
 	const Movements & GetMovements() const;

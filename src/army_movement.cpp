@@ -56,6 +56,17 @@ void ArmyMovement::AddMovements(const Movements & movements)
 	m_army_movement.insert(m_army_movement.end(), movements.begin(), movements.end());
 }
 
+// Remove movement
+void ArmyMovement::RemoveMovement(const Region * from, const Region * to)
+{
+	Movements::iterator it = GetMovement(from, to);
+	// Found it
+	if (it != m_army_movement.end())
+	{
+		m_army_movement.erase(it);
+	}
+}
+
 // Get current list of movements
 const Movements & ArmyMovement::GetMovements() const
 {
