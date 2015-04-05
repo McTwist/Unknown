@@ -56,12 +56,12 @@ RoundHistory::RoundHistory(int round)
 const RegionHistory * RoundHistory::GetRegion(const Region * region) const
 {
 	// Locate the region that is placed in history
-	std::vector<const RegionHistory>::const_iterator it = std::find(m_regions.begin(), m_regions.end(), region);
+	std::vector<RegionHistory>::const_iterator it = std::find(m_regions.begin(), m_regions.end(), region);
 	// Return only if it exists
 	return it == m_regions.end() ? 0 : &*it;
 }
 
-const std::vector<const ArmyMovement> & RoundHistory::GetMovements() const
+const std::vector<ArmyMovement> & RoundHistory::GetMovements() const
 {
 	return m_movements;
 }

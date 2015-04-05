@@ -49,7 +49,7 @@ public:
 
 	// Get
 	const RegionHistory * GetRegion(const Region * region) const;
-	const std::vector<const ArmyMovement> & GetMovements() const;
+	const std::vector<ArmyMovement> & GetMovements() const;
 
 	// Set
 	void AddRegion(const Region * region, const Bot * owner, int army);
@@ -57,8 +57,8 @@ public:
 
 private:
 
-	std::vector<const RegionHistory> m_regions;
-	std::vector<const ArmyMovement> m_movements;
+	std::vector<RegionHistory> m_regions;
+	std::vector<ArmyMovement> m_movements;
 	int m_round;
 };
 
