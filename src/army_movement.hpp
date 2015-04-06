@@ -22,6 +22,10 @@ class ArmyMovement
 {
 public:
 
+	ArmyMovement();
+	ArmyMovement(const ArmyMovement & movements);
+	ArmyMovement(const Movements & movements);
+
 	// Reset movements
 	void Reset();
 

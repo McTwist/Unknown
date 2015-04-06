@@ -18,6 +18,20 @@ struct FindMovement
 	}
 };
 
+ArmyMovement::ArmyMovement()
+{
+}
+
+ArmyMovement::ArmyMovement(const ArmyMovement & movements)
+{
+	m_army_movement = movements.m_army_movement;
+}
+
+ArmyMovement::ArmyMovement(const Movements & movements)
+{
+	AddMovements(movements);
+}
+
 // Reset the movements
 void ArmyMovement::Reset()
 {
