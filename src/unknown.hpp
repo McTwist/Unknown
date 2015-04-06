@@ -6,7 +6,7 @@
 
 #include "bot.hpp"
 #include "interpreter.hpp"
-#include "army_movement.hpp"
+#include "army_movements.hpp"
 
 // My bot
 

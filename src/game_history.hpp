@@ -2,7 +2,7 @@
 #ifndef GAME_HISTORY_HPP
 #define GAME_HISTORY_HPP
 
-#include "army_movement.hpp"
+#include "army_movements.hpp"
 
 #include <vector>
 
