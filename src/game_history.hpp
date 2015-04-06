@@ -39,6 +39,8 @@ private:
 	int m_round;
 };
 
+typedef std::vector<RegionHistory> RegionHistoryList;
+
 // History of a round
 class RoundHistory
 {
@@ -49,7 +51,9 @@ public:
 
 	// Get
 	const RegionHistory * GetRegion(const Region * region) const;
-	const std::vector<ArmyMovement> & GetMovements() const;
+	const RegionHistoryList GetRegionHistory(const Region * region) const;
+	const ArmyMovement & GetMovements() const;
+	ArmyMovement GetRegionMovements(const Region * region) const;
 
 	// Set
 	void AddRegion(const Region * region, const Bot * owner, int army);
@@ -57,8 +61,8 @@ public:
 
 private:
 
-	std::vector<RegionHistory> m_regions;
-	std::vector<ArmyMovement> m_movements;
+	RegionHistoryList m_regions;
+	ArmyMovement m_movements;
 	int m_round;
 };
 
