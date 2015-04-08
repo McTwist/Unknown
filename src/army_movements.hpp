@@ -1,14 +1,14 @@
 #pragma once
-#ifndef ARMY_MOVEMENT_HPP
-#define ARMY_MOVEMENT_HPP
+#ifndef ARMY_MOVEMENTS_HPP
+#define ARMY_MOVEMENTS_HPP
 
 #include <map>
 #include <vector>
 
 class Region;
 
-// Movement structure
-struct Movement
+// ArmyMovement structure
+struct ArmyMovement
 {
 	const Region * from;
 	const Region * to;
@@ -16,43 +16,43 @@ struct Movement
 };
 
 // Current movements
-typedef std::vector<Movement> Movements;
+typedef std::vector<ArmyMovement> ArmyMovementList;
 
-class ArmyMovement
+class ArmyMovements
 {
 public:
 
-	ArmyMovement();
-	ArmyMovement(const ArmyMovement & movements);
-	ArmyMovement(const Movements & movements);
+	ArmyMovements();
+	ArmyMovements(const ArmyMovements & movements);
+	ArmyMovements(const ArmyMovementList & movements);
 
 	// Reset movements
 	void Reset();
 
 	// Add movement
 	void AddMovement(const Region * from, const Region * to, int armies);
-	void AddMovement(const Movement & movement);
-	void AddMovements(const Movements & movements);
+	void AddMovement(const ArmyMovement & movement);
+	void AddMovements(const ArmyMovementList & movements);
 	
 	// Remove movement
 	void RemoveMovement(const Region * from, const Region * to);
 
 	// Get list of movement
-	const Movements & GetMovements() const;
+	const ArmyMovementList & GetMovements() const;
 	
 	int GetArmiesFromMovement(const Region * from, const Region * to) const;
-	Movements GetMovementsFromRegion(const Region * from) const;
-	Movements GetMovementsToRegion(const Region * to) const;
+	ArmyMovementList GetMovementsFromRegion(const Region * from) const;
+	ArmyMovementList GetMovementsToRegion(const Region * to) const;
 	int GetArmiesFromRegion(const Region * from) const;
 	int GetArmiesToRegion(const Region * to) const;
 
 private:
 
-	Movements::iterator GetMovement(const Region * from, const Region * to);
-	Movements::const_iterator GetMovement(const Region * from, const Region * to) const;
+	ArmyMovementList::iterator GetMovement(const Region * from, const Region * to);
+	ArmyMovementList::const_iterator GetMovement(const Region * from, const Region * to) const;
 
-	Movements m_army_movement;
+	ArmyMovementList m_army_movement;
 
 };
 
-#endif // ARMY_MOVEMENT_HPP
+#endif // ARMY_MOVEMENTS_HPP

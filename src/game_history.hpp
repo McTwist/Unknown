@@ -52,17 +52,17 @@ public:
 	// Get
 	const RegionHistory * GetRegion(const Region * region) const;
 	const RegionHistoryList GetRegionHistory(const Region * region) const;
-	const ArmyMovement & GetMovements() const;
-	ArmyMovement GetRegionMovements(const Region * region) const;
+	const ArmyMovements & GetMovements() const;
+	ArmyMovements GetRegionMovements(const Region * region) const;
 
 	// Set
 	void AddRegion(const Region * region, const Bot * owner, int army);
-	void AddMovements(const ArmyMovement & movements);
+	void AddMovements(const ArmyMovements & movements);
 
 private:
 
 	RegionHistoryList m_regions;
-	ArmyMovement m_movements;
+	ArmyMovements m_movements;
 	int m_round;
 };
 
@@ -86,7 +86,7 @@ public:
 	// Add region that have changed
 	void AddRegion(const Region * region, const Bot * owner, int army);
 	// Add movement that occurred
-	void AddMovements(const ArmyMovement & movement);
+	void AddMovements(const ArmyMovements & movement);
 	// Move on to next round
 	void NextRound();
 

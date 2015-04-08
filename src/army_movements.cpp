@@ -12,36 +12,36 @@ struct FindMovement
 	const Region * from;
 	const Region * to;
 	
-	inline bool operator()(const Movement & movement)
+	inline bool operator()(const ArmyMovement & movement)
 	{
 		return movement.from == from && movement.to == to;
 	}
 };
 
-ArmyMovement::ArmyMovement()
+ArmyMovements::ArmyMovements()
 {
 }
 
-ArmyMovement::ArmyMovement(const ArmyMovement & movements)
+ArmyMovements::ArmyMovements(const ArmyMovements & movements)
 {
 	m_army_movement = movements.m_army_movement;
 }
 
-ArmyMovement::ArmyMovement(const Movements & movements)
+ArmyMovements::ArmyMovements(const ArmyMovementList & movements)
 {
 	AddMovements(movements);
 }
 
 // Reset the movements
-void ArmyMovement::Reset()
+void ArmyMovements::Reset()
 {
 	m_army_movement.clear();
 }
 
 // Add new movement
-void ArmyMovement::AddMovement(const Region * from, const Region * to, int armies)
+void ArmyMovements::AddMovement(const Region * from, const Region * to, int armies)
 {
-	Movements::iterator it = GetMovement(from, to);
+	ArmyMovementList::iterator it = GetMovement(from, to);
 	// Append on old one
 	if (it != m_army_movement.end())
 	{
@@ -50,7 +50,7 @@ void ArmyMovement::AddMovement(const Region * from, const Region * to, int armie
 	// Add new
 	else
 	{
-		Movement movement;
+		ArmyMovement movement;
 		movement.from = from;
 		movement.to = to;
 		movement.armies = armies;
@@ -59,21 +59,21 @@ void ArmyMovement::AddMovement(const Region * from, const Region * to, int armie
 }
 
 // Add new movement
-void ArmyMovement::AddMovement(const Movement & movement)
+void ArmyMovements::AddMovement(const ArmyMovement & movement)
 {
 	AddMovement(movement.from, movement.to, movement.armies);
 }
 
 // Add a list of movements
-void ArmyMovement::AddMovements(const Movements & movements)
+void ArmyMovements::AddMovements(const ArmyMovementList & movements)
 {
 	m_army_movement.insert(m_army_movement.end(), movements.begin(), movements.end());
 }
 
 // Remove movement
-void ArmyMovement::RemoveMovement(const Region * from, const Region * to)
+void ArmyMovements::RemoveMovement(const Region * from, const Region * to)
 {
-	Movements::iterator it = GetMovement(from, to);
+	ArmyMovementList::iterator it = GetMovement(from, to);
 	// Found it
 	if (it != m_army_movement.end())
 	{
@@ -82,64 +82,64 @@ void ArmyMovement::RemoveMovement(const Region * from, const Region * to)
 }
 
 // Get current list of movements
-const Movements & ArmyMovement::GetMovements() const
+const ArmyMovementList & ArmyMovements::GetMovements() const
 {
 	return m_army_movement;
 }
 
 // Get movement that exist already
-Movements::iterator ArmyMovement::GetMovement(const Region * from, const Region * to)
+ArmyMovementList::iterator ArmyMovements::GetMovement(const Region * from, const Region * to)
 {
 	return std::find_if(m_army_movement.begin(), m_army_movement.end(), FindMovement(from, to));
 }
-Movements::const_iterator ArmyMovement::GetMovement(const Region * from, const Region * to) const
+ArmyMovementList::const_iterator ArmyMovements::GetMovement(const Region * from, const Region * to) const
 {
 	return std::find_if(m_army_movement.begin(), m_army_movement.end(), FindMovement(from, to));
 }
 
 // Get amount of armies depending on movement
-int ArmyMovement::GetArmiesFromMovement(const Region * from, const Region * to) const
+int ArmyMovements::GetArmiesFromMovement(const Region * from, const Region * to) const
 {
-	Movements::const_iterator it = GetMovement(from, to);
+	ArmyMovementList::const_iterator it = GetMovement(from, to);
 
 	return (it != m_army_movement.end()) ? it->armies : -1;
 }
 
 // Get movements from const Region
-Movements ArmyMovement::GetMovementsFromRegion(const Region * from) const
+ArmyMovementList ArmyMovements::GetMovementsFromRegion(const Region * from) const
 {
-	Movements found;
-	for (Movements::const_iterator it = m_army_movement.begin(); it != m_army_movement.end(); ++it)
+	ArmyMovementList found;
+	for (ArmyMovementList::const_iterator it = m_army_movement.begin(); it != m_army_movement.end(); ++it)
 		if (it->from == from)
 			found.push_back(*it);
 	return found;
 }
 
 // Get movements to const Region
-Movements ArmyMovement::GetMovementsToRegion(const Region * to) const
+ArmyMovementList ArmyMovements::GetMovementsToRegion(const Region * to) const
 {
-	Movements found;
-	for (Movements::const_iterator it = m_army_movement.begin(); it != m_army_movement.end(); ++it)
+	ArmyMovementList found;
+	for (ArmyMovementList::const_iterator it = m_army_movement.begin(); it != m_army_movement.end(); ++it)
 		if (it->to == to)
 			found.push_back(*it);
 	return found;
 }
 
 // Get amount of armies moved from const Region
-int ArmyMovement::GetArmiesFromRegion(const Region * from) const
+int ArmyMovements::GetArmiesFromRegion(const Region * from) const
 {
 	int armies = 0;
-	for (Movements::const_iterator it = m_army_movement.begin(); it != m_army_movement.end(); ++it)
+	for (ArmyMovementList::const_iterator it = m_army_movement.begin(); it != m_army_movement.end(); ++it)
 		if (it->from == from)
 			armies += it->armies;
 	return armies;
 }
 
 // Get amount of armies moved to const Region
-int ArmyMovement::GetArmiesToRegion(const Region * to) const
+int ArmyMovements::GetArmiesToRegion(const Region * to) const
 {
 	int armies = 0;
-	for (Movements::const_iterator it = m_army_movement.begin(); it != m_army_movement.end(); ++it)
+	for (ArmyMovementList::const_iterator it = m_army_movement.begin(); it != m_army_movement.end(); ++it)
 		if (it->to == to)
 			armies += it->armies;
 	return armies;

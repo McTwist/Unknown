@@ -660,8 +660,8 @@ void Unknown::SendAttackTransfer()
 	// Move everything
 	else
 	{
-		const Movements & movements = m_movement.GetMovements();
-		for (Movements::const_iterator it = movements.begin(); it != movements.end(); ++it)
+		const ArmyMovementList & movements = m_movement.GetMovements();
+		for (ArmyMovementList::const_iterator it = movements.begin(); it != movements.end(); ++it)
 			AttackTransfer(GetName(), it->from->GetId(), it->to->GetId(), it->armies);
 	}
 	

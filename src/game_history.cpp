@@ -92,16 +92,16 @@ const RegionHistoryList RoundHistory::GetRegionHistory(const Region * region) co
 }
 
 // Get round movements
-const ArmyMovement & RoundHistory::GetMovements() const
+const ArmyMovements & RoundHistory::GetMovements() const
 {
 	return m_movements;
 }
 
 // Get region movements this round
-ArmyMovement RoundHistory::GetRegionMovements(const Region * region) const
+ArmyMovements RoundHistory::GetRegionMovements(const Region * region) const
 {
 	// Create a new momovement list
-	ArmyMovement movements(m_movements.GetMovementsFromRegion(region));
+	ArmyMovements movements(m_movements.GetMovementsFromRegion(region));
 	movements.AddMovements(m_movements.GetMovementsToRegion(region));
 	return movements;
 }
@@ -113,7 +113,7 @@ void RoundHistory::AddRegion(const Region * region, const Bot * owner, int army)
 }
 
 // Add movements to round
-void RoundHistory::AddMovements(const ArmyMovement & movements)
+void RoundHistory::AddMovements(const ArmyMovements & movements)
 {
 	m_movements.AddMovements(movements.GetMovements());
 }
@@ -175,7 +175,7 @@ void GameHistory::AddRegion(const Region * region, const Bot * owner, int army)
 }
 
 // Add movements to a current round
-void GameHistory::AddMovements(const ArmyMovement & movement)
+void GameHistory::AddMovements(const ArmyMovements & movement)
 {
 	m_rounds[m_round - 1].AddMovements(movement);
 }
