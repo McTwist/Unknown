@@ -168,6 +168,12 @@ void GameHistory::SetRounds(int rounds)
 	}
 }
 
+// Add region to current round
+void GameHistory::AddRegion(const Region * region)
+{
+	m_rounds[m_round - 1].AddRegion(region, region->GetOwner(), region->GetArmies());
+}
+
 // Add a region to current round
 void GameHistory::AddRegion(const Region * region, const Bot * owner, int army)
 {

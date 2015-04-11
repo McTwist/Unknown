@@ -91,6 +91,7 @@ public:
 
 	// Modify current round
 	// Add region that have changed
+	void AddRegion(const Region * region);
 	void AddRegion(const Region * region, const Bot * owner, int army);
 	// Add movement that occurred
 	void AddMovements(const ArmyMovements & movement);
