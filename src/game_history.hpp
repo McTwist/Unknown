@@ -50,9 +50,14 @@ public:
 	RoundHistory(int round);
 
 	// Get
+	// Get history of region
+	// Return 0 if history does not exist
 	const RegionHistory * GetRegion(const Region * region) const;
+	// Get a list of history of region
 	const RegionHistoryList GetRegionHistory(const Region * region) const;
+	// Get all army movements
 	const ArmyMovements & GetMovements() const;
+	// Get army movements depending on region
 	ArmyMovements GetRegionMovements(const Region * region) const;
 
 	// Set
@@ -77,6 +82,8 @@ public:
 	int GetRound() const;
 	// Get a round
 	const RoundHistory * GetRound(int round) const;
+	// Get a round depending on region
+	// This might return 0 if no history exists for the region
 	const RoundHistory * GetRound(const Region * region) const;
 
 	// Set how many rounds

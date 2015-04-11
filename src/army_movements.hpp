@@ -48,6 +48,7 @@ public:
 
 private:
 
+	// Different ways to get movement iterators
 	ArmyMovementList::iterator GetMovement(const Region * from, const Region * to);
 	ArmyMovementList::const_iterator GetMovement(const Region * from, const Region * to) const;
 
