@@ -387,7 +387,7 @@ void Unknown::onGoAttackTransfer(float time)
 				{
 					// Get assistance
 					Regions assistance = GetRegions(attack_region->GetNeighbors());
-					int movement_armies =  Region::GetRegionsArmies(assistance) + m_movement.GetArmiesToRegion(attack_region);
+					int movement_armies =  Region::GetRegionsArmies(assistance) + m_movements.GetArmiesToRegion(attack_region);
 					// Attack if enough collaborated manpower
 					if (Region::CalculateAttackProbability(movement_armies - assistance.size(), attack_region->GetArmies()) > 2.0f)
 					{
@@ -622,13 +622,13 @@ void Unknown::MoveArmy(Region * source, Region * target, int amount)
 	source->MoveArmies(amount);
 
 	// New system
-	m_movement.AddMovement(source, target, amount);
+	m_movements.AddMovement(source, target, amount);
 }
 
 // Gets how much is attacked on a single region
 int Unknown::GetAttackRegion(const Region * region) const
 {
-	return m_movement.GetArmiesToRegion(region);
+	return m_movements.GetArmiesToRegion(region);
 }
 
 // Sends placement results to engine
@@ -655,12 +655,12 @@ void Unknown::SendPlaceArmies()
 void Unknown::SendAttackTransfer()
 {
 	// Nothing decided, do nothing
-	if (m_movement.GetMovements().empty())
+	if (m_movements.GetMovements().empty())
 		NoMoves();
 	// Move everything
 	else
 	{
-		const ArmyMovementList & movements = m_movement.GetMovements();
+		const ArmyMovementList & movements = m_movements.GetMovements();
 		for (ArmyMovementList::const_iterator it = movements.begin(); it != movements.end(); ++it)
 			AttackTransfer(GetName(), it->from->GetId(), it->to->GetId(), it->armies);
 	}
@@ -669,5 +669,5 @@ void Unknown::SendAttackTransfer()
 	Send();
 	
 	// Reset previous moves
-	m_movement.Reset();
+	m_movements.Reset();
 }

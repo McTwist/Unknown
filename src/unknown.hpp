@@ -46,7 +46,7 @@ private:
 	PlacementList m_placement;
 
 	// Advanced movement handler
-	ArmyMovements m_movement;
+	ArmyMovements m_movements;
 };
 
 #endif // UNKNOWN_HPP
