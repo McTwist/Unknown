@@ -132,6 +132,9 @@ void Map::onUpdateMap(int region_id, const std::string & name, int armies)
 		if (region->IsWasteland())
 			region->GetSuperRegion()->RemoveWasteland(region);
 	}
+
+	// Update history for region
+	g_game->GetHistory()->AddRegion(region);
 }
 
 // Place opponent armies
@@ -146,6 +149,31 @@ void Map::onOpponentPlaceArmies(const std::string & /*name*/, int region_id, int
 	
 	// Update armies
 	region->AddArmies(amount);
+}
+
+// Attack/move opponent armies
+void Map::onOpponentAttackTransfer(const std::string & /*name*/, int source_region, int target_region, int amount)
+{
+	RegionMap::iterator it = m_regions.find(source_region);
+	// Did not find a valid region
+	if (it == m_regions.end())
+		return;
+
+	Region * source = it->second;
+
+	it = m_regions.find(target_region);
+	// Did not find a valid region
+	if (it == m_regions.end())
+		return;
+
+	Region * target = it->second;
+
+	// Prepare the movement
+	ArmyMovements movements;
+	movements.AddMovement(source, target, amount);
+
+	// Add the movement
+	g_game->GetHistory()->AddMovements(movements);
 }
 
 // Ending round

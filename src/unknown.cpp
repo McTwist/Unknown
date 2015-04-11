@@ -668,6 +668,9 @@ void Unknown::SendAttackTransfer()
 	// And flush
 	Send();
 	
+	// Store own movements
+	g_game->GetHistory()->AddMovements(m_movements);
+
 	// Reset previous moves
 	m_movements.Reset();
 }

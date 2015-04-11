@@ -39,6 +39,12 @@ Map * Game::GetMap()
 	return &m_map;
 }
 
+// Get game history
+GameHistory * Game::GetHistory()
+{
+	return &m_history;
+}
+
 // Get bot from name
 Bot * Game::GetBot(const std::string & name) const
 {
@@ -110,7 +116,17 @@ void Game::onSettingsStartingArmies(int /*amount*/)
 			(*it)->onEndRound();
 	// Increase
 	++m_round;
+
+	// New history
+	m_history.NextRound();
+
 	// Start next round
 	for (std::list<GameState *>::iterator it = m_states.begin(); it != m_states.end(); ++it)
 		(*it)->onStartRound(m_round);
+}
+
+// Setting max rounds
+void Game::onSettingsMaxRounds(int amount)
+{
+	m_history.SetRounds(amount);
 }

@@ -38,6 +38,7 @@ protected:
 	void onSetupMapWasteland(int region);
 	void onUpdateMap(int region, const std::string & name, int armies);
 	void onOpponentPlaceArmies(const std::string & name, int region, int amount);
+	void onOpponentAttackTransfer(const std::string & name, int source_region, int target_region, int amount);
 	
 	void onEndRound();
 	
