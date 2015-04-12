@@ -162,6 +162,7 @@ void GameHistory::SetRounds(int rounds)
 	}
 	else
 	{
+		m_rounds.reserve(rounds);
 		// Create the rounds that are missing
 		for (int i = m_rounds.size(); i < rounds; ++i)
 			m_rounds.push_back(RoundHistory(i));
