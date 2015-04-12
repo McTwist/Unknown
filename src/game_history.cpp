@@ -122,13 +122,14 @@ void RoundHistory::AddMovements(const ArmyMovements & movements)
  * Game History
  */
 GameHistory::GameHistory()
-	: m_round(1)
+	: m_round(0)
 {
 }
 
+// Get current round
 int GameHistory::GetRound() const
 {
-	return m_round;
+	return (m_round < (int)m_rounds.size()) ? m_round : (int)m_rounds.size() - 1;
 }
 
 // Get a round depending on number
@@ -154,17 +155,17 @@ const RoundHistory * GameHistory::GetRound(const Region * region) const
 // Set rounds available
 void GameHistory::SetRounds(int rounds)
 {
-	if (rounds > (int)m_rounds.size())
+	if (rounds + 1 > (int)m_rounds.size())
 	{
 		// Remove unneeded rounds
-		while ((int)m_rounds.size() > rounds)
+		while ((int)m_rounds.size() > rounds + 1)
 			m_rounds.pop_back();
 	}
 	else
 	{
-		m_rounds.reserve(rounds);
+		m_rounds.reserve(rounds + 1);
 		// Create the rounds that are missing
-		for (int i = m_rounds.size(); i < rounds; ++i)
+		for (int i = m_rounds.size(); i <= rounds; ++i)
 			m_rounds.push_back(RoundHistory(i));
 	}
 }
@@ -172,19 +173,19 @@ void GameHistory::SetRounds(int rounds)
 // Add region to current round
 void GameHistory::AddRegion(const Region * region)
 {
-	m_rounds[m_round - 1].AddRegion(region, region->GetOwner(), region->GetArmies());
+	m_rounds[GetRound()].AddRegion(region, region->GetOwner(), region->GetArmies());
 }
 
 // Add a region to current round
 void GameHistory::AddRegion(const Region * region, const Bot * owner, int army)
 {
-	m_rounds[m_round - 1].AddRegion(region, owner, army);
+	m_rounds[GetRound()].AddRegion(region, owner, army);
 }
 
 // Add movements to a current round
 void GameHistory::AddMovements(const ArmyMovements & movement)
 {
-	m_rounds[m_round - 1].AddMovements(movement);
+	m_rounds[GetRound()].AddMovements(movement);
 }
 
 // Increase round number
