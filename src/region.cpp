@@ -153,7 +153,7 @@ float Region::CalculateAttackProbabilityWithLuck(int from, int to, float chance)
 	// This should not happen, but is checked to avoid crash
 	if (to <= 0)
 		return 9000.1f;
-	// Calculate guarenteed values
+	// Calculate guaranteed values
 	float offence = from * Rules::chance_of_attack * (1.0f - Rules::luck);
 	float defence = to * Rules::chance_of_defense * (1.0f - Rules::luck);
 	// Random chance calculation
