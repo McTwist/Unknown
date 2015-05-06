@@ -238,7 +238,7 @@ Regions Region::GetUnionUnsorted(const Regions & regionsl, const Regions & regio
 // Get equals
 Regions Region::GetIntersectionUnsorted(const Regions & regionsl, const Regions & regionsr)
 {
-	Regions result, rhl = regionsl, rhr = regionsr;
+	Regions rhl = regionsl, rhr = regionsr;
 	Sort(rhl);
 	Unique(rhl);
 	Sort(rhr);
@@ -249,7 +249,7 @@ Regions Region::GetIntersectionUnsorted(const Regions & regionsl, const Regions 
 // Difference
 Regions Region::GetDifferenceUnsorted(const Regions & regionsl, const Regions & regionsr)
 {
-	Regions result, rhl = regionsl, rhr = regionsr;
+	Regions rhl = regionsl, rhr = regionsr;
 	Sort(rhl);
 	Unique(rhl);
 	Sort(rhr);
@@ -260,7 +260,7 @@ Regions Region::GetDifferenceUnsorted(const Regions & regionsl, const Regions & 
 // Symmetric difference
 Regions Region::GetSymmetricDifferenceUnsorted(const Regions & regionsl, const Regions & regionsr)
 {
-	Regions result, rhl = regionsl, rhr = regionsr;
+	Regions rhl = regionsl, rhr = regionsr;
 	Sort(rhl);
 	Unique(rhl);
 	Sort(rhr);
