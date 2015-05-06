@@ -155,15 +155,16 @@ const RoundHistory * GameHistory::GetRound(const Region * region) const
 // Set rounds available
 void GameHistory::SetRounds(int rounds)
 {
-	if (rounds + 1 > (int)m_rounds.size())
+	unsigned int size = rounds + 1;
+	// Shrink the list
+	if (size < m_rounds.size())
 	{
-		// Remove unneeded rounds
-		while ((int)m_rounds.size() > rounds + 1)
-			m_rounds.pop_back();
+		m_rounds.resize(size);
 	}
+	// Increase the list
 	else
 	{
-		m_rounds.reserve(rounds + 1);
+		m_rounds.reserve(size);
 		// Create the rounds that are missing
 		for (int i = m_rounds.size(); i <= rounds; ++i)
 			m_rounds.push_back(RoundHistory(i));
