@@ -205,7 +205,7 @@ public: // methods
 		FSA_ELEMENT *p = m_pFirstFree;
 		while( p )
 		{
-			printf( "%x!%x ", p->pPrev, p->pNext );
+			printf( "%p!%p ", p->pPrev, p->pNext );
 			p = p->pNext;
 		}
 		printf( "\n" );
@@ -215,7 +215,7 @@ public: // methods
 		p = m_pFirstUsed;
 		while( p )
 		{
-			printf( "%x!%x ", p->pPrev, p->pNext );
+			printf( "%p!%p ", p->pPrev, p->pNext );
 			p = p->pNext;
 		}
 		printf( "\n" );
