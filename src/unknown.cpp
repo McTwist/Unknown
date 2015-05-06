@@ -332,8 +332,8 @@ void Unknown::onGoAttackTransfer(float time)
 	Region * region = 0;
 	
 	// Get Neighbors
-	const Regions & neighbors = GetNeighbors();
-	Regions hostile = GetHostileRegions(neighbors);
+	//const Regions & neighbors = GetNeighbors();
+	//Regions hostile = GetHostileRegions(neighbors);
 	// Extra regions
 	Regions inner = GetUnaffectedRegions();
 	Regions effective = GetEffectiveRegions(inner);
