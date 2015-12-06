@@ -36,6 +36,7 @@ protected:
 	void onSetupMapRegion(int region, int super_region);
 	void onSetupMapNeighbor(int region, const std::vector<int> & neighbors);
 	void onSetupMapWasteland(int region);
+	void onSetupMapOpponentStartingRegions(const std::vector<int> & regions);
 	void onUpdateMap(int region, const std::string & name, int armies);
 	void onOpponentPlaceArmies(const std::string & name, int region, int amount);
 	void onOpponentAttackTransfer(const std::string & name, int source_region, int target_region, int amount);

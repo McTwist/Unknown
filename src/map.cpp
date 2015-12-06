@@ -111,6 +111,17 @@ void Map::onSetupMapWasteland(int region)
 		sup->AddWasteland(reg);
 }
 
+// Regions opponent picked
+void Map::onSetupMapOpponentStartingRegions(const std::vector<int> & regions)
+{
+	GameHistory * history = g_game->GetHistory();
+	for (std::vector<int>::const_iterator it = regions.begin(); it != regions.end(); ++it)
+	{
+		Region * region = GetRegion(*it);
+		history->AddRegion(region);
+	}
+}
+
 // Update map status
 void Map::onUpdateMap(int region_id, const std::string & name, int armies)
 {
