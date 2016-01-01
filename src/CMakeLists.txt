@@ -25,7 +25,8 @@ if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 	add_definitions(-D UNIX=1)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -j 4")
+	# Note: Somehow doesn't work correctly
+	#set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j 4")
 endif()
 
 file(GLOB sources "*.cpp")
