@@ -345,9 +345,6 @@ void Unknown::onGoAttackTransfer(float time)
 	// * Attack when there is benefits
 	// * Try to flank
 	
-	// Use:
-	//Region::CalculateAttackProbability
-	
 	/*
 	 * Decide to attack or not
 	 * Make sure it is profitable enough (Try not to loose more than they do)
