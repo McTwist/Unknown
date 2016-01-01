@@ -46,16 +46,28 @@ Regions GamePredictor::GetBotRegions(const Bot * bot) const
 // Get amount of armies a bot get each round
 int GamePredictor::GetBotArmyPerRound(const Bot * bot) const
 {
+	// TODO: Try to figure out how many armies that is default per round
+	int armies = 5; // Note: Constant value for now
 	// Get predicted regions
 	Regions regions = GetBotRegions(bot);
 
 	// Calculate how many super regions the bot owns
-	// TODO
+	typedef std::map<SuperRegion *, unsigned int> SuperRegionCount;
+	SuperRegionCount super_region_amount;
+	for (Regions::iterator it = regions.begin(); it != regions.end(); ++it)
+	{
+		Region * region = *it;
+		if (region->GetOwner() == bot)
+			super_region_amount[region->GetSuperRegion()] += 1;
+	}
 
+	// If owning all regions, it owns the super regions
 	// Calculate how much the super regions get each round
-	// TODO
+	for (SuperRegionCount::iterator it = super_region_amount.begin(); it != super_region_amount.end(); ++it)
+		if (it->second == it->first->GetRegions().size())
+			armies += it->first->GetBonus();
 
-	return 0;
+	return armies;
 }
 
 // Get bot current army a bot could have
