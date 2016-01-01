@@ -79,7 +79,7 @@ const RegionHistory * RoundHistory::GetRegion(const Region * region) const
 }
 
 // Get region history list
-const RegionHistoryList RoundHistory::GetRegionHistory(const Region * region) const
+RegionHistoryList RoundHistory::GetRegionHistory(const Region * region) const
 {
 	RegionHistoryList history = m_regions;
 	// Remove the regions that does not contain the region we're looking for

@@ -54,7 +54,7 @@ public:
 	// Return 0 if history does not exist
 	const RegionHistory * GetRegion(const Region * region) const;
 	// Get a list of history of region
-	const RegionHistoryList GetRegionHistory(const Region * region) const;
+	RegionHistoryList GetRegionHistory(const Region * region) const;
 	// Get all army movements
 	const ArmyMovements & GetMovements() const;
 	// Get army movements depending on region
