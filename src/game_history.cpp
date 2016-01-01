@@ -91,6 +91,12 @@ RegionHistoryList RoundHistory::GetRegionHistory(const Region * region) const
 	return history;
 }
 
+// Get region history
+const RegionHistoryList & RoundHistory::GetHistories() const
+{
+	return m_regions;
+}
+
 // Get round movements
 const ArmyMovements & RoundHistory::GetMovements() const
 {

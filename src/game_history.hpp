@@ -55,6 +55,8 @@ public:
 	const RegionHistory * GetRegion(const Region * region) const;
 	// Get a list of history of region
 	RegionHistoryList GetRegionHistory(const Region * region) const;
+	// Get region history
+	const RegionHistoryList & GetHistories() const;
 	// Get all army movements
 	const ArmyMovements & GetMovements() const;
 	// Get army movements depending on region
