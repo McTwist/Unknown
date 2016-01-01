@@ -94,6 +94,9 @@ public:
 	// Set how many rounds
 	void SetRounds(int rounds);
 
+	// Get bot current regions owned
+	RegionHistoryList GetBotRegions(const Bot * owner) const;
+
 	// Modify current round
 	// Add region that have changed
 	void AddRegion(const Region * region);

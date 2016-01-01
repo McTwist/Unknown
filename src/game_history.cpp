@@ -183,6 +183,34 @@ void GameHistory::SetRounds(int rounds)
 	}
 }
 
+// Get
+RegionHistoryList GameHistory::GetBotRegions(const Bot * owner) const
+{
+	RegionHistoryList regions;
+	std::set<const Region *> region_check;
+
+	// Go through previous rounds backwards
+	for (int i = m_round - 1; i >= 0; --i)
+	{
+		const RoundHistory & round = m_rounds[i];
+		// Get bot regions form this round
+		const RegionHistoryList & history = round.GetHistories();
+		for (RegionHistoryList::const_iterator it = history.begin(); it != history.end(); ++it)
+		{
+			// Make sure only to take the latest one
+			if (region_check.find(it->GetRegion()) == region_check.end())
+			{
+				regions.push_back(*it);
+				// Take the ones that you own
+				if (it->GetOwner() == owner)
+					region_check.insert(it->GetRegion());
+			}
+		}
+	}
+
+	return regions;
+}
+
 // Add region to current round
 void GameHistory::AddRegion(const Region * region)
 {
