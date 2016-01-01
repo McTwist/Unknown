@@ -154,7 +154,7 @@ const RoundHistory * GameHistory::GetRound(int round) const
 // Get a round depending on region
 const RoundHistory * GameHistory::GetRound(const Region * region) const
 {
-	for (int i = m_round - 1; i > 0; --i)
+	for (int i = m_round - 1; i >= 0; --i)
 	{
 		const RoundHistory & round = m_rounds[i];
 		// Check if there's history of the region
