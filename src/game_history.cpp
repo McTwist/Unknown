@@ -112,6 +112,12 @@ ArmyMovements RoundHistory::GetRegionMovements(const Region * region) const
 	return movements;
 }
 
+// Get round
+int RoundHistory::GetRound() const
+{
+	return m_round;
+}
+
 // Add region to round
 void RoundHistory::AddRegion(const Region * region, const Bot * owner, int army)
 {

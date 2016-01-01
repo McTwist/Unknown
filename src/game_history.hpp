@@ -62,6 +62,9 @@ public:
 	// Get army movements depending on region
 	ArmyMovements GetRegionMovements(const Region * region) const;
 
+	// Get round number
+	int GetRound() const;
+
 	// Set
 	void AddRegion(const Region * region, const Bot * owner, int army);
 	void AddMovements(const ArmyMovements & movements);
