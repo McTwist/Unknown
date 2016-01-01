@@ -127,6 +127,7 @@ int GamePredictor::GetRegionCurrentArmy(const Region * region) const
 
 	// Calculate how much possible the region could have
 	// TODO
+	// Predict the amount by calculating the max per round and how long not visible
 
 	return 0;
 }
