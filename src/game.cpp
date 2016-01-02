@@ -119,7 +119,8 @@ void Game::onSettingsStartingArmies(int amount)
 	// First round
 	else
 	{
-		// Note: Make sure this is correct
+		// Note: This might not be entirely correct
+		//       Check player bot for a more accurate calculation
 		Rules::default_armies_per_round = amount;
 	}
 

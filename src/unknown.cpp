@@ -2,6 +2,7 @@
 
 // Required for connection to the map and check bot activity
 #include "game.hpp"
+#include "rules.hpp"
 
 // Timing and logging
 #include "timer.hpp"
@@ -587,7 +588,28 @@ void Unknown::onGoAttackTransfer(float time)
 // Starting the round
 void Unknown::onStartRound(int round)
 {
-	(void)round;
+	// Recalculate default armies to ensure it is correct
+	if (round == 1)
+	{
+		GameHistory * history = g_game->GetHistory();
+		// Get this round
+		const RoundHistory * round_history = history->GetRound(round);
+		const RegionHistoryList & list = round_history->GetHistories();
+		for (RegionHistoryList::const_iterator it = list.begin(); it != list.end(); ++it)
+		{
+			const Region * region = it->GetRegion();
+			// Only we owns it
+			if (region->GetOwner() == this)
+			{
+				SuperRegion * super = region->GetSuperRegion();
+				// Only one region, so got the bonus
+				if (super->GetRegions().size() == 1)
+				{
+					Rules::default_armies_per_round -= super->GetBonus();
+				}
+			}
+		}
+	}
 	// Changing strategy depending on how long it has gone
 }
 
