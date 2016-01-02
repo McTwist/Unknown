@@ -2,6 +2,8 @@
 
 #include "region.hpp"
 
+#include "rules.hpp"
+
 // There's no region available
 struct IfHasNoRegion
 {
@@ -181,6 +183,9 @@ void GameHistory::SetRounds(int rounds)
 		for (int i = m_rounds.size(); i <= rounds; ++i)
 			m_rounds.push_back(RoundHistory(i));
 	}
+
+	// Set max rounds
+	Rules::max_rounds = rounds;
 }
 
 // Get
