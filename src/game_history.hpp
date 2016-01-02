@@ -85,6 +85,8 @@ public:
 
 	// Get current round
 	int GetRound() const;
+	// Get max rounds
+	int GetMaxRounds() const;
 	// Get a round
 	const RoundHistory * GetRound(int round) const;
 	// Get a round depending on region

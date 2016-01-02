@@ -146,6 +146,12 @@ int GameHistory::GetRound() const
 	return (m_round < (int)m_rounds.size()) ? m_round : (int)m_rounds.size() - 1;
 }
 
+// Get max rounds
+int GameHistory::GetMaxRounds() const
+{
+	return (int)m_rounds.size();
+}
+
 // Get a round depending on number
 const RoundHistory * GameHistory::GetRound(int round) const
 {
