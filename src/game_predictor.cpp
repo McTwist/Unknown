@@ -34,7 +34,7 @@ Regions GamePredictor::GetBotRegions(const Bot * bot) const
 	RegionHistoryList history_regions = history->GetBotRegions(bot);
 	for (RegionHistoryList::iterator it = history_regions.begin(); it != history_regions.end(); ++it)
 		// Take only new ones
-		if (std::find(history_regions.begin(), history_regions.end(), it->GetRegion()) == history_regions.end())
+		if (std::find(regions.begin(), regions.end(), it->GetRegion()) == regions.end())
 			// TODO: Fix const-correctness
 			regions.push_back((Region *)it->GetRegion());
 
