@@ -1,6 +1,7 @@
 #include "game.hpp"
 
 #include "game_state.hpp"
+#include "rules.hpp"
 
 // Global object
 Game * g_game = 0;
@@ -107,12 +108,20 @@ void Game::onSettingsOpponentBot(const std::string & name)
 
 // Start of game
 // Note: This relies on the underlying structure of Interpreter to be called first
-void Game::onSettingsStartingArmies(int /*amount*/)
+void Game::onSettingsStartingArmies(int amount)
 {
 	// End this round
 	if (m_history.GetRound() > 0)
+	{
 		for (std::list<GameState *>::iterator it = m_states.begin(); it != m_states.end(); ++it)
 			(*it)->onEndRound();
+	}
+	// First round
+	else
+	{
+		// Note: Make sure this is correct
+		Rules::default_armies_per_round = amount;
+	}
 
 	// New history
 	m_history.NextRound();
