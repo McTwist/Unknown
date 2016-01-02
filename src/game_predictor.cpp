@@ -3,6 +3,7 @@
 #include "bot.hpp"
 #include "region.hpp"
 #include "game.hpp"
+#include "rules.hpp"
 
 /*
  * Note about the predictor:
@@ -46,8 +47,8 @@ Regions GamePredictor::GetBotRegions(const Bot * bot) const
 // Get amount of armies a bot get each round
 int GamePredictor::GetBotArmyPerRound(const Bot * bot) const
 {
-	// TODO: Try to figure out how many armies that is default per round
-	int armies = 5; // Note: Constant value for now
+	// Starting with default armies
+	int armies = Rules::default_armies_per_round;
 	// Get predicted regions
 	Regions regions = GetBotRegions(bot);
 
