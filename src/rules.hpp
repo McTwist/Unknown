@@ -9,6 +9,7 @@ class Rules
 public:
 	// These rules are applied to the game in itself
 	static int max_rounds;
+	static int default_armies_per_round;
 	static bool fog_of_war;
 	static float luck;
 	static float chance_of_attack;

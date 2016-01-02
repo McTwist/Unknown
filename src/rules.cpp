@@ -8,6 +8,10 @@
 // How many rounds before a draw is occurred
 int Rules::max_rounds = 100;
 
+// How many armies you get each round per default
+// Note: This could be calculated on the first round
+int Rules::default_armies_per_round = 5;
+
 // Whether or not a fog of war is applied to the map
 bool Rules::fog_of_war = true;
 
