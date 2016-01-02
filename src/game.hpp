@@ -56,8 +56,6 @@ private:
 	GameStateList m_states;
 
 	GameHistory m_history;
-	
-	int m_round;
 };
 
 // Keeping this global
