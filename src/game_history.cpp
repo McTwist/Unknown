@@ -143,7 +143,8 @@ GameHistory::GameHistory()
 // Get current round
 int GameHistory::GetRound() const
 {
-	return (m_round < (int)m_rounds.size()) ? m_round : (int)m_rounds.size() - 1;
+	int max_rounds = GetMaxRounds();
+	return (m_round < max_rounds) ? m_round : max_rounds - 1;
 }
 
 // Get max rounds
@@ -156,7 +157,7 @@ int GameHistory::GetMaxRounds() const
 const RoundHistory * GameHistory::GetRound(int round) const
 {
 	// Quick test to avoid memory leaks
-	return round < (int)m_rounds.size() ? &m_rounds[round - 1] : 0;
+	return round < GetMaxRounds() ? &m_rounds[round - 1] : 0;
 }
 
 // Get a round depending on region
