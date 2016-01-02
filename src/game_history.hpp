@@ -108,8 +108,6 @@ public:
 
 private:
 
-	RoundHistory & GetRound(int round);
-
 	std::vector<RoundHistory> m_rounds;
 	int m_round;
 };
