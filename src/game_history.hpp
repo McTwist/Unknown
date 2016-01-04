@@ -114,8 +114,11 @@ public:
 	void AddRegion(const Region * region);
 	void AddRegion(const Region * region, const Bot * owner, int army);
 	// Add movement that occurred
+	void AddMovement(const Region * from, const Region * to, int army);
 	void AddMovements(const ArmyMovements & movement);
 	// Add placement that occured
+	void AddPlacement(const Region * region, int army);
+	void AddPlacement(int region, int army);
 	void AddPlacements(const ArmyPlacements & placement);
 	// Move on to next round
 	void NextRound();

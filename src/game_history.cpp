@@ -138,10 +138,27 @@ void RoundHistory::AddRegion(const Region * region, const Bot * owner, int army)
 	m_regions.push_back(RegionHistory(region, owner, army, m_round));
 }
 
+// Add one movement
+void RoundHistory::AddMovement(const Region * from, const Region * to, int army)
+{
+	m_movements.AddMovement(from, to, army);
+}
+
 // Add movements to round
 void RoundHistory::AddMovements(const ArmyMovements & movements)
 {
 	m_movements.AddMovements(movements.GetMovements());
+}
+
+// Add one placement
+void RoundHistory::AddPlacement(const Region * region, int army)
+{
+	m_placements.SetArmies(region, army);
+}
+
+void RoundHistory::AddPlacement(int region, int army)
+{
+	m_placements.SetArmies(region, army);
 }
 
 // Add placements to round
@@ -253,10 +270,27 @@ void GameHistory::AddRegion(const Region * region, const Bot * owner, int army)
 	m_rounds[GetRound()].AddRegion(region, owner, army);
 }
 
+// Move once
+void GameHistory::AddMovement(const Region * from, const Region * to, int army)
+{
+	m_rounds[GetRound()].AddMovement(from, to, army);
+}
+
 // Add movements to a current round
 void GameHistory::AddMovements(const ArmyMovements & movement)
 {
 	m_rounds[GetRound()].AddMovements(movement);
+}
+
+// Place once
+void GameHistory::AddPlacement(const Region * region, int army)
+{
+	m_rounds[GetRound()].AddPlacement(region, army);
+}
+
+void GameHistory::AddPlacement(int region, int army)
+{
+	m_rounds[GetRound()].AddPlacement(region, army);
 }
 
 // Add placements to a current round
