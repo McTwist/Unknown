@@ -314,13 +314,26 @@ void Unknown::onGoAttackTransfer(float time)
 	Region * region = 0;
 	
 	// Get Neighbors
-	//const Regions & neighbors = GetNeighbors();
-	//Regions hostile = GetHostileRegions(neighbors);
+	const Regions & neighbors = GetNeighbors();
+	Regions hostile = GetHostileRegions(neighbors);
 	// Extra regions
 	Regions inner = GetUnaffectedRegions();
 	Regions effective = GetEffectiveRegions(inner);
 	Regions affected = GetAffectedRegions();
 	Regions affective = GetEffectiveRegions(affected);
+
+	// Amount of armies per round for each bot
+	std::map<Bot *, int> armies_per_bot;
+	for (Regions::iterator it = hostile.begin(); it != hostile.end(); ++it)
+	{
+		Region * region = *it;
+		std::map<Bot *, int>::iterator at = armies_per_bot.find(region->GetOwner());
+		if (at == armies_per_bot.end())
+		{
+			int armies = m_predictor.GetBotArmyPerRound(region->GetOwner());
+			armies_per_bot.insert(std::make_pair(region->GetOwner(), armies));
+		}
+	}
 	
 	// TODO: Create valid possible moves
 	// * Hold ground
@@ -349,6 +362,8 @@ void Unknown::onGoAttackTransfer(float time)
 
 			// The region that will be attacked
 			Region * attack_region = host.front();
+			// Get the most probably amount of army
+			int defense_armies = attack_region->GetArmies() + armies_per_bot[attack_region->GetOwner()];
 			
 			// Note: Attack probability could change depending on several interactions
 			
@@ -368,7 +383,7 @@ void Unknown::onGoAttackTransfer(float time)
 					Regions assistance = GetRegions(attack_region->GetNeighbors());
 					int movement_armies =  Region::GetRegionsArmies(assistance) + m_movements.GetArmiesToRegion(attack_region);
 					// Attack if enough collaborated manpower
-					if (Region::CalculateAttackProbability(movement_armies - assistance.size(), attack_region->GetArmies()) > 2.0f)
+					if (Region::CalculateAttackProbability(movement_armies - assistance.size(), defense_armies) > 2.0f)
 					{
 						MoveArmy(region, attack_region, region->GetArmies() - 1);
 					}
