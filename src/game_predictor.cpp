@@ -72,7 +72,7 @@ int GamePredictor::GetBotArmyPerRound(const Bot * bot) const
 
 	// Add in the placements from previous round as a minimum
 	int minimum_size = 0;
-	if (const RoundHistory * round = history->GetRound(history->GetRound() - 1))
+	if (const RoundHistory * round = history->GetRound(history->GetRound()))
 	{
 		const RegionHistoryList & list = round->GetHistories();
 		for (RegionHistoryList::const_iterator it = list.begin(); it != list.end(); ++it)
