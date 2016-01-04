@@ -159,9 +159,10 @@ void Unknown::onGoPlaceArmies(float time)
 			// Calculate armies
 			int armies = Region::GetRegionsArmies(effective);
 			int effective_armies = armies - count;
+			int effective_army = effective.front()->GetArmies() + m_armies_per_bot[effective.front()->GetOwner()];
 			
 			// I should be stronger
-			if (Region::CalculateAttackProbability(region, effective.front()) < 1.0f)
+			if (Region::CalculateAttackProbability(region->GetArmies(), effective_army) < 1.0f)
 			{
 				// Calculate troops
 				int troops = int(m_placements.GetAvailableArmies() * effective_troop_placer);
