@@ -421,6 +421,18 @@ void Unknown::onGoAttackTransfer(float time)
 				Regions host = GetHostileRegions(neigh);
 				// Calculate their strength
 				int defense_armies = Region::GetRegionsArmies(host) - host.size();
+
+				std::set<Bot *> used_bot;
+				for (Regions::iterator nt = host.begin(); nt != host.end(); ++nt)
+				{
+					attack_region = *nt;
+					if (used_bot.find(attack_region->GetOwner()) == used_bot.end())
+					{
+						// Increase armies that can attack
+						defense_armies += m_armies_per_bot[attack_region->GetOwner()];
+						used_bot.insert(attack_region->GetOwner());
+					}
+				}
 				
 				// Sort for further use
 				//std::sort(host.begin(), host.end(), compare_region_neighbor_army_diff);
