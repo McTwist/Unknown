@@ -47,6 +47,8 @@ Regions GamePredictor::GetBotRegions(const Bot * bot) const
 // Get amount of armies a bot get each round
 int GamePredictor::GetBotArmyPerRound(const Bot * bot) const
 {
+	GameHistory * history = g_game->GetHistory();
+
 	// Starting with default armies
 	int armies = Rules::default_armies_per_round;
 	// Get predicted regions
@@ -68,7 +70,19 @@ int GamePredictor::GetBotArmyPerRound(const Bot * bot) const
 		if (it->second == it->first->GetRegions().size())
 			armies += it->first->GetBonus();
 
-	return armies;
+	// Add in the placements from previous round as a minimum
+	int minimum_size = 0;
+	if (const RoundHistory * round = history->GetRound(history->GetRound() - 1))
+	{
+		const RegionHistoryList & list = round->GetHistories();
+		for (RegionHistoryList::const_iterator it = list.begin(); it != list.end(); ++it)
+		{
+			if (it->GetOwner() == bot)
+				minimum_size += round->GetRegionPlacement(it->GetRegion());
+		}
+	}
+
+	return armies > minimum_size ? armies : minimum_size;
 }
 
 // Get bot current army a bot could have
