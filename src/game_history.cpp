@@ -105,6 +105,12 @@ const ArmyMovements & RoundHistory::GetMovements() const
 	return m_movements;
 }
 
+// Get region placements this round
+const ArmyPlacements & RoundHistory::GetPlacements() const
+{
+	return m_placements;
+}
+
 // Get region movements this round
 ArmyMovements RoundHistory::GetRegionMovements(const Region * region) const
 {
@@ -112,6 +118,12 @@ ArmyMovements RoundHistory::GetRegionMovements(const Region * region) const
 	ArmyMovements movements(m_movements.GetMovementsFromRegion(region));
 	movements.AddMovements(m_movements.GetMovementsToRegion(region));
 	return movements;
+}
+
+// Get army placement depending on region
+int RoundHistory::GetRegionPlacement(const Region * region) const
+{
+	return m_placements.GetRegionPlacement(region);
 }
 
 // Get round
@@ -130,6 +142,12 @@ void RoundHistory::AddRegion(const Region * region, const Bot * owner, int army)
 void RoundHistory::AddMovements(const ArmyMovements & movements)
 {
 	m_movements.AddMovements(movements.GetMovements());
+}
+
+// Add placements to round
+void RoundHistory::AddPlacements(const ArmyPlacements & placements)
+{
+	m_placements.AddPlacements(placements.GetPlacements());
 }
 
 /*
@@ -239,6 +257,12 @@ void GameHistory::AddRegion(const Region * region, const Bot * owner, int army)
 void GameHistory::AddMovements(const ArmyMovements & movement)
 {
 	m_rounds[GetRound()].AddMovements(movement);
+}
+
+// Add placements to a current round
+void GameHistory::AddPlacements(const ArmyPlacements & placement)
+{
+	m_rounds[GetRound()].AddPlacements(placement);
 }
 
 // Increase round number

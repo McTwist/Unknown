@@ -3,6 +3,7 @@
 #define GAME_HISTORY_HPP
 
 #include "army_movements.hpp"
+#include "army_placements.hpp"
 
 #include <vector>
 
@@ -59,20 +60,29 @@ public:
 	const RegionHistoryList & GetHistories() const;
 	// Get all army movements
 	const ArmyMovements & GetMovements() const;
+	// Get all army placements
+	const ArmyPlacements & GetPlacements() const;
 	// Get army movements depending on region
 	ArmyMovements GetRegionMovements(const Region * region) const;
+	// Get army placement depending on region
+	int GetRegionPlacement(const Region * region) const;
 
 	// Get round number
 	int GetRound() const;
 
 	// Set
 	void AddRegion(const Region * region, const Bot * owner, int army);
+	void AddMovement(const Region * from, const Region * to, int army);
 	void AddMovements(const ArmyMovements & movements);
+	void AddPlacement(const Region * region, int army);
+	void AddPlacement(int region, int army);
+	void AddPlacements(const ArmyPlacements & placements);
 
 private:
 
 	RegionHistoryList m_regions;
 	ArmyMovements m_movements;
+	ArmyPlacements m_placements;
 	int m_round;
 };
 
@@ -105,6 +115,8 @@ public:
 	void AddRegion(const Region * region, const Bot * owner, int army);
 	// Add movement that occurred
 	void AddMovements(const ArmyMovements & movement);
+	// Add placement that occured
+	void AddPlacements(const ArmyPlacements & placement);
 	// Move on to next round
 	void NextRound();
 
