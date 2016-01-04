@@ -8,6 +8,7 @@
 #include "interpreter.hpp"
 #include "army_movements.hpp"
 #include "army_placements.hpp"
+#include "game_predictor.hpp"
 
 // My bot
 
@@ -42,6 +43,9 @@ private:
 
 	// Advanced movement handler
 	ArmyMovements m_movements;
+
+	// Predicting the game
+	GamePredictor m_predictor;
 };
 
 #endif // UNKNOWN_HPP
