@@ -46,6 +46,9 @@ private:
 
 	// Predicting the game
 	GamePredictor m_predictor;
+
+	// Armies per bot per round
+	std::map<Bot *, int> m_armies_per_bot;
 };
 
 #endif // UNKNOWN_HPP
