@@ -40,6 +40,7 @@ Regions GamePredictor::GetBotRegions(const Bot * bot) const
 
 	// Get possible bot regions (Calculations...)
 	// TODO
+	// Note: Probably get the most efficient outcome
 
 	return regions;
 }
