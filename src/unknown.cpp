@@ -12,7 +12,7 @@
 #include "stl_sort.hpp"
 
 Unknown::Unknown()
-: m_armies(0)
+//: m_armies(0)
 {
 }
 
@@ -85,7 +85,7 @@ void Unknown::onPickStartingRegion(float time, const std::vector<int> & regions)
 // Get starting armies
 void Unknown::onSettingsStartingArmies(int amount)
 {
-	m_armies = amount;
+	m_placements.SetCurrentPlacement(amount);
 }
 
 // Place armies
@@ -154,10 +154,10 @@ void Unknown::onGoPlaceArmies(float time)
 			if (Region::CalculateAttackProbability(region, effective.front()) < 1.0f)
 			{
 				// Calculate troops
-				int troops = int(m_armies * effective_troop_placer);
+				int troops = int(m_placements.GetAvailableArmies() * effective_troop_placer);
 				// Check for errors
-				if (troops > m_armies)
-					troops = m_armies;
+				if (troops > m_placements.GetAvailableArmies())
+					troops = m_placements.GetAvailableArmies();
 				if (troops <= 0)
 					continue;
 				// Place troops
@@ -167,10 +167,10 @@ void Unknown::onGoPlaceArmies(float time)
 			if (effective_armies > region->GetArmies() - 1)
 			{
 				// Calculate troops
-				int troops = int(m_armies * effective_troop_placer);
+				int troops = int(m_placements.GetAvailableArmies() * effective_troop_placer);
 				// Check for errors
-				if (troops > m_armies)
-					troops = m_armies;
+				if (troops > m_placements.GetAvailableArmies())
+					troops = m_placements.GetAvailableArmies();
 				if (troops <= 0)
 					continue;
 				// Place troops
@@ -179,7 +179,7 @@ void Unknown::onGoPlaceArmies(float time)
 		}
 	}
 	// Roam freely
-	if (m_armies > 0)
+	if (m_placements.GetAvailableArmies() > 0)
 	{
 		// Get all current super regions
 		std::set<SuperRegion *> check_regions;
@@ -284,29 +284,29 @@ void Unknown::onGoPlaceArmies(float time)
 		#else
 		// Place instead everything on one
 		if (!place.empty())
-			PlaceArmy(place.front(), m_armies);
+			PlaceArmy(place.front(), m_placements.GetAvailableArmies());
 		#endif
 	}
 	
 	// Just to ensure everything is placed
-	if (m_armies > 0)
+	if (m_placements.GetAvailableArmies() > 0)
 	{
 		// Get the front
 		if (!affected.empty())
 		{
-			Debug::Log("Had to place %d armies on %d.\n", m_armies, affected.front()->GetId());
-			PlaceArmy(affected.front(), m_armies);
+			Debug::Log("Had to place %d armies on %d.\n", m_placements.GetAvailableArmies(), affected.front()->GetId());
+			PlaceArmy(affected.front(), m_placements.GetAvailableArmies());
 		}
 		// Place randomly
 		else if (!m_regions.empty())
 		{
-			Debug::Log("Warn: Had to place %d armies on %d.\n", m_armies, m_regions.front()->GetId());
-			PlaceArmy(m_regions.front(), m_armies);
+			Debug::Log("Warn: Had to place %d armies on %d.\n", m_placements.GetAvailableArmies(), m_regions.front()->GetId());
+			PlaceArmy(m_regions.front(), m_placements.GetAvailableArmies());
 		}
 		// Why did this happen?
 		else
 		{
-			Debug::Log("Error: Unable to place %d armies.\n", m_armies);
+			Debug::Log("Error: Unable to place %d armies.\n", m_placements.GetAvailableArmies());
 		}
 	}
 	
@@ -618,15 +618,10 @@ void Unknown::onStartRound(int round)
 // Note: More checks could be made
 void Unknown::PlaceArmy(Region * region, int amount)
 {
-	// Don't even dare go there
-	if (amount > m_armies)
-		amount = m_armies;
-	// Add to other placements
-	m_placement[region->GetId()] += amount;
+	// Add armies for placement
+	amount = m_placements.AddArmies(region, amount);
 	// Add armies on this one
 	region->AddArmies(amount);
-	// Remove armies on hand
-	m_armies -= amount;
 }
 
 // Move army from one place to an another
@@ -654,20 +649,24 @@ int Unknown::GetAttackRegion(const Region * region) const
 void Unknown::SendPlaceArmies()
 {
 	// Nothing decided, do nothing
-	if (m_placement.empty())
+	const ArmyPlacementList & placements = m_placements.GetPlacements();
+	if (placements.empty())
 		NoMoves();
 	// Place everything
 	else
 	{
-		for (PlacementList::iterator it = m_placement.begin(); it != m_placement.end(); ++it)
+		for (ArmyPlacementList::const_iterator it = placements.begin(); it != placements.end(); ++it)
 			PlaceArmies(GetName(), it->first, it->second);
 	}
 	
 	// And flush
 	Send();
 	
+	// Store own movements
+	g_game->GetHistory()->AddPlacements(m_placements);
+	
 	// Clear it
-	m_placement.clear();
+	m_placements.Clear();
 }
 
 // Sends movement results to engine

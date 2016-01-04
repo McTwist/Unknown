@@ -7,6 +7,7 @@
 #include "bot.hpp"
 #include "interpreter.hpp"
 #include "army_movements.hpp"
+#include "army_placements.hpp"
 
 // My bot
 
@@ -36,14 +37,8 @@ private:
 	void SendPlaceArmies();
 	void SendAttackTransfer();
 	
-	// How many armies that can be used this turn
-	int m_armies;
-	
-	// desc<region, armies>
-	typedef std::map<int, int> PlacementList;
-	
 	// Current moves
-	PlacementList m_placement;
+	ArmyPlacements m_placements;
 
 	// Advanced movement handler
 	ArmyMovements m_movements;
