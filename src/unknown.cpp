@@ -372,7 +372,7 @@ void Unknown::onGoAttackTransfer(float time)
 			if (Region::CalculateAttackProbability(armies - count, region->GetArmies()) < 1.0f)
 			{
 				// Attack if enough power
-				if (Region::CalculateAttackProbability(region, attack_region) > 1.0f)
+				if (Region::CalculateAttackProbability(region->GetArmies(), defense_armies) > 1.0f)
 				{
 					// Note: How many armies moved should be changed later on
 					MoveArmy(region, attack_region, region->GetArmies() - 1);
