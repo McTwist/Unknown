@@ -114,6 +114,19 @@ void Unknown::onGoPlaceArmies(float time)
 	Regions hostile = GetHostileRegions(neighbors);
 	// Get affected regions
 	Regions affected = GetAffectedRegions();
+
+	// Amount of armies per round for each bot
+	m_armies_per_bot.clear();
+	for (Regions::iterator it = hostile.begin(); it != hostile.end(); ++it)
+	{
+		region = *it;
+		std::map<Bot *, int>::iterator at = m_armies_per_bot.find(region->GetOwner());
+		if (at == m_armies_per_bot.end())
+		{
+			int armies = m_predictor.GetBotArmyPerRound(region->GetOwner());
+			m_armies_per_bot.insert(std::make_pair(region->GetOwner(), armies));
+		}
+	}
 	
 	// Handle hostiles as they are active
 	if (!hostile.empty())
@@ -313,27 +326,11 @@ void Unknown::onGoAttackTransfer(float time)
 	
 	Region * region = 0;
 	
-	// Get Neighbors
-	const Regions & neighbors = GetNeighbors();
-	Regions hostile = GetHostileRegions(neighbors);
 	// Extra regions
 	Regions inner = GetUnaffectedRegions();
 	Regions effective = GetEffectiveRegions(inner);
 	Regions affected = GetAffectedRegions();
 	Regions affective = GetEffectiveRegions(affected);
-
-	// Amount of armies per round for each bot
-	std::map<Bot *, int> armies_per_bot;
-	for (Regions::iterator it = hostile.begin(); it != hostile.end(); ++it)
-	{
-		Region * region = *it;
-		std::map<Bot *, int>::iterator at = armies_per_bot.find(region->GetOwner());
-		if (at == armies_per_bot.end())
-		{
-			int armies = m_predictor.GetBotArmyPerRound(region->GetOwner());
-			armies_per_bot.insert(std::make_pair(region->GetOwner(), armies));
-		}
-	}
 	
 	// TODO: Create valid possible moves
 	// * Hold ground
@@ -363,7 +360,7 @@ void Unknown::onGoAttackTransfer(float time)
 			// The region that will be attacked
 			Region * attack_region = host.front();
 			// Get the most probably amount of army
-			int defense_armies = attack_region->GetArmies() + armies_per_bot[attack_region->GetOwner()];
+			int defense_armies = attack_region->GetArmies() + m_armies_per_bot[attack_region->GetOwner()];
 			
 			// Note: Attack probability could change depending on several interactions
 			
