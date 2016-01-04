@@ -2,6 +2,7 @@
 
 // Required for connection to the map and check bot activity
 #include "game.hpp"
+#include "rules.hpp"
 
 // Timing and logging
 #include "timer.hpp"
@@ -11,7 +12,6 @@
 #include "stl_sort.hpp"
 
 Unknown::Unknown()
-: m_armies(0)
 {
 }
 
@@ -84,7 +84,7 @@ void Unknown::onPickStartingRegion(float time, const std::vector<int> & regions)
 // Get starting armies
 void Unknown::onSettingsStartingArmies(int amount)
 {
-	m_armies = amount;
+	m_placements.SetCurrentPlacement(amount);
 }
 
 // Place armies
@@ -92,8 +92,6 @@ void Unknown::onGoPlaceArmies(float time)
 {
 	Timer timer;
 	timer.Start();
-	// Get neutral area bot
-	//Bot * neutral = g_game->GetNeutral();
 	
 	Region * region = 0;
 	
@@ -153,10 +151,10 @@ void Unknown::onGoPlaceArmies(float time)
 			if (Region::CalculateAttackProbability(region, effective.front()) < 1.0f)
 			{
 				// Calculate troops
-				int troops = int(m_armies * effective_troop_placer);
+				int troops = int(m_placements.GetAvailableArmies() * effective_troop_placer);
 				// Check for errors
-				if (troops > m_armies)
-					troops = m_armies;
+				if (troops > m_placements.GetAvailableArmies())
+					troops = m_placements.GetAvailableArmies();
 				if (troops <= 0)
 					continue;
 				// Place troops
@@ -166,10 +164,10 @@ void Unknown::onGoPlaceArmies(float time)
 			if (effective_armies > region->GetArmies() - 1)
 			{
 				// Calculate troops
-				int troops = int(m_armies * effective_troop_placer);
+				int troops = int(m_placements.GetAvailableArmies() * effective_troop_placer);
 				// Check for errors
-				if (troops > m_armies)
-					troops = m_armies;
+				if (troops > m_placements.GetAvailableArmies())
+					troops = m_placements.GetAvailableArmies();
 				if (troops <= 0)
 					continue;
 				// Place troops
@@ -178,7 +176,7 @@ void Unknown::onGoPlaceArmies(float time)
 		}
 	}
 	// Roam freely
-	if (m_armies > 0)
+	if (m_placements.GetAvailableArmies() > 0)
 	{
 		// Get all current super regions
 		std::set<SuperRegion *> check_regions;
@@ -267,45 +265,31 @@ void Unknown::onGoPlaceArmies(float time)
 		// Sort in the way of priority
 		std::sort(place.begin(), place.end(), compare_region_super_region_priority);
 		
-		// Go through the list, placing the last armies
-		#if 0
-		Regions::iterator it = place.begin();
-		while (m_armies > 0)
-		{
-			region = *it;
-			// Add one to each region
-			PlaceArmy(region, 1);
-			++it;
-			// Go around
-			if (it == place.end())
-				it = place.begin();
-		}
-		#else
 		// Place instead everything on one
+		// Note: Previous one was distributing it evenly
 		if (!place.empty())
-			PlaceArmy(place.front(), m_armies);
-		#endif
+			PlaceArmy(place.front(), m_placements.GetAvailableArmies());
 	}
 	
 	// Just to ensure everything is placed
-	if (m_armies > 0)
+	if (m_placements.GetAvailableArmies() > 0)
 	{
 		// Get the front
 		if (!affected.empty())
 		{
-			Debug::Log("Had to place %d armies on %d.\n", m_armies, affected.front()->GetId());
-			PlaceArmy(affected.front(), m_armies);
+			Debug::Log("Had to place %d armies on %d.\n", m_placements.GetAvailableArmies(), affected.front()->GetId());
+			PlaceArmy(affected.front(), m_placements.GetAvailableArmies());
 		}
 		// Place randomly
 		else if (!m_regions.empty())
 		{
-			Debug::Log("Warn: Had to place %d armies on %d.\n", m_armies, m_regions.front()->GetId());
-			PlaceArmy(m_regions.front(), m_armies);
+			Debug::Log("Warn: Had to place %d armies on %d.\n", m_placements.GetAvailableArmies(), m_regions.front()->GetId());
+			PlaceArmy(m_regions.front(), m_placements.GetAvailableArmies());
 		}
 		// Why did this happen?
 		else
 		{
-			Debug::Log("Error: Unable to place %d armies.\n", m_armies);
+			Debug::Log("Error: Unable to place %d armies.\n", m_placements.GetAvailableArmies());
 		}
 	}
 	
@@ -322,8 +306,6 @@ void Unknown::onGoAttackTransfer(float time)
 {
 	Timer timer;
 	timer.Start();
-	// Get neutral area bot
-	//Bot * neutral = g_game->GetNeutral();
 
 	// Strategy variables
 	// Chance for region to attack neutral regions
@@ -332,21 +314,31 @@ void Unknown::onGoAttackTransfer(float time)
 	Region * region = 0;
 	
 	// Get Neighbors
-	//const Regions & neighbors = GetNeighbors();
-	//Regions hostile = GetHostileRegions(neighbors);
+	const Regions & neighbors = GetNeighbors();
+	Regions hostile = GetHostileRegions(neighbors);
 	// Extra regions
 	Regions inner = GetUnaffectedRegions();
 	Regions effective = GetEffectiveRegions(inner);
 	Regions affected = GetAffectedRegions();
 	Regions affective = GetEffectiveRegions(affected);
+
+	// Amount of armies per round for each bot
+	std::map<Bot *, int> armies_per_bot;
+	for (Regions::iterator it = hostile.begin(); it != hostile.end(); ++it)
+	{
+		Region * region = *it;
+		std::map<Bot *, int>::iterator at = armies_per_bot.find(region->GetOwner());
+		if (at == armies_per_bot.end())
+		{
+			int armies = m_predictor.GetBotArmyPerRound(region->GetOwner());
+			armies_per_bot.insert(std::make_pair(region->GetOwner(), armies));
+		}
+	}
 	
 	// TODO: Create valid possible moves
 	// * Hold ground
 	// * Attack when there is benefits
 	// * Try to flank
-	
-	// Use:
-	//Region::CalculateAttackProbability
 	
 	/*
 	 * Decide to attack or not
@@ -370,6 +362,8 @@ void Unknown::onGoAttackTransfer(float time)
 
 			// The region that will be attacked
 			Region * attack_region = host.front();
+			// Get the most probably amount of army
+			int defense_armies = attack_region->GetArmies() + armies_per_bot[attack_region->GetOwner()];
 			
 			// Note: Attack probability could change depending on several interactions
 			
@@ -378,7 +372,7 @@ void Unknown::onGoAttackTransfer(float time)
 			if (Region::CalculateAttackProbability(armies - count, region->GetArmies()) < 1.0f)
 			{
 				// Attack if enough power
-				if (Region::CalculateAttackProbability(region, attack_region) > 1.0f)
+				if (Region::CalculateAttackProbability(region->GetArmies(), defense_armies) > 1.0f)
 				{
 					// Note: How many armies moved should be changed later on
 					MoveArmy(region, attack_region, region->GetArmies() - 1);
@@ -389,7 +383,7 @@ void Unknown::onGoAttackTransfer(float time)
 					Regions assistance = GetRegions(attack_region->GetNeighbors());
 					int movement_armies =  Region::GetRegionsArmies(assistance) + m_movements.GetArmiesToRegion(attack_region);
 					// Attack if enough collaborated manpower
-					if (Region::CalculateAttackProbability(movement_armies - assistance.size(), attack_region->GetArmies()) > 2.0f)
+					if (Region::CalculateAttackProbability(movement_armies - assistance.size(), defense_armies) > 2.0f)
 					{
 						MoveArmy(region, attack_region, region->GetArmies() - 1);
 					}
@@ -448,10 +442,10 @@ void Unknown::onGoAttackTransfer(float time)
 				continue;
 			}
 
-#if 1
 			// Sort the neutrals according to super region priority
 			std::sort(neutrals.begin(), neutrals.end(), compare_regions_bot_priority);
 
+			// Attack several neutrals at the same time if possible
 			// Note: Fix this better later on
 			{
 				Regions attack;
@@ -492,37 +486,6 @@ void Unknown::onGoAttackTransfer(float time)
 					}
 				}
 			}
-
-#else
-
-			// Get amount of armies around the region
-			Region * optimal = neutrals.front();
-			float opt_max = 0;
-			
-			// Keep priority within super region
-			for (Regions::iterator nt = neutrals.begin(); nt != neutrals.end(); ++nt)
-			{
-				Region * r = *nt;
-				// Get my bot ownership of super region count
-				int count = r->GetSuperRegion()->GetBotRegionCount(this);
-				// Get priority of super region
-				float prio = r->GetSuperRegion()->GetPriority(count);
-				// Update optimal pick
-				if (prio > opt_max)
-				{
-					opt_max = prio;
-					optimal = r;
-				}
-			}
-
-			// Attack if enough power
-			// Note: This was set to 1.5 in previous project. Probably not needed now when the luck factor is so low.
-			if (Region::CalculateAttackProbability(region, optimal) > 1.0f)
-			{
-				// Note: How many armies moved should be changed later on
-				MoveArmy(region, optimal, region->GetArmies()-1);
-			}
-#endif
 		}
 	}
 	
@@ -590,7 +553,28 @@ void Unknown::onGoAttackTransfer(float time)
 // Starting the round
 void Unknown::onStartRound(int round)
 {
-	(void)round;
+	// Recalculate default armies to ensure it is correct
+	if (round == 1)
+	{
+		GameHistory * history = g_game->GetHistory();
+		// Get this round
+		const RoundHistory * round_history = history->GetRound(round);
+		const RegionHistoryList & list = round_history->GetHistories();
+		for (RegionHistoryList::const_iterator it = list.begin(); it != list.end(); ++it)
+		{
+			const Region * region = it->GetRegion();
+			// Only we owns it
+			if (region->GetOwner() == this)
+			{
+				SuperRegion * super = region->GetSuperRegion();
+				// Only one region, so got the bonus
+				if (super->GetRegions().size() == 1)
+				{
+					Rules::default_armies_per_round -= super->GetBonus();
+				}
+			}
+		}
+	}
 	// Changing strategy depending on how long it has gone
 }
 
@@ -599,15 +583,10 @@ void Unknown::onStartRound(int round)
 // Note: More checks could be made
 void Unknown::PlaceArmy(Region * region, int amount)
 {
-	// Don't even dare go there
-	if (amount > m_armies)
-		amount = m_armies;
-	// Add to other placements
-	m_placement[region->GetId()] += amount;
+	// Add armies for placement
+	amount = m_placements.AddArmies(region, amount);
 	// Add armies on this one
 	region->AddArmies(amount);
-	// Remove armies on hand
-	m_armies -= amount;
 }
 
 // Move army from one place to an another
@@ -635,20 +614,24 @@ int Unknown::GetAttackRegion(const Region * region) const
 void Unknown::SendPlaceArmies()
 {
 	// Nothing decided, do nothing
-	if (m_placement.empty())
+	const ArmyPlacementList & placements = m_placements.GetPlacements();
+	if (placements.empty())
 		NoMoves();
 	// Place everything
 	else
 	{
-		for (PlacementList::iterator it = m_placement.begin(); it != m_placement.end(); ++it)
+		for (ArmyPlacementList::const_iterator it = placements.begin(); it != placements.end(); ++it)
 			PlaceArmies(GetName(), it->first, it->second);
 	}
 	
 	// And flush
 	Send();
 	
+	// Store own movements
+	g_game->GetHistory()->AddPlacements(m_placements);
+	
 	// Clear it
-	m_placement.clear();
+	m_placements.Clear();
 }
 
 // Sends movement results to engine

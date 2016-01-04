@@ -143,7 +143,7 @@ float Region::CalculateAttackProbability(int from, int to)
 	// This should not happen, but is checked to avoid crash
 	if (to <= 0)
 		return 9000.1f;
-	return (from  * Rules::chance_of_attack) / (to * Rules::chance_of_defense);
+	return (from * Rules::chance_of_attack) / (to * Rules::chance_of_defense);
 }
 
 // Calculates the current attack probability with luck

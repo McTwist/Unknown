@@ -3,6 +3,7 @@
 #define GAME_HISTORY_HPP
 
 #include "army_movements.hpp"
+#include "army_placements.hpp"
 
 #include <vector>
 
@@ -54,20 +55,34 @@ public:
 	// Return 0 if history does not exist
 	const RegionHistory * GetRegion(const Region * region) const;
 	// Get a list of history of region
-	const RegionHistoryList GetRegionHistory(const Region * region) const;
+	RegionHistoryList GetRegionHistory(const Region * region) const;
+	// Get region history
+	const RegionHistoryList & GetHistories() const;
 	// Get all army movements
 	const ArmyMovements & GetMovements() const;
+	// Get all army placements
+	const ArmyPlacements & GetPlacements() const;
 	// Get army movements depending on region
 	ArmyMovements GetRegionMovements(const Region * region) const;
+	// Get army placement depending on region
+	int GetRegionPlacement(const Region * region) const;
+
+	// Get round number
+	int GetRound() const;
 
 	// Set
 	void AddRegion(const Region * region, const Bot * owner, int army);
+	void AddMovement(const Region * from, const Region * to, int army);
 	void AddMovements(const ArmyMovements & movements);
+	void AddPlacement(const Region * region, int army);
+	void AddPlacement(int region, int army);
+	void AddPlacements(const ArmyPlacements & placements);
 
 private:
 
 	RegionHistoryList m_regions;
 	ArmyMovements m_movements;
+	ArmyPlacements m_placements;
 	int m_round;
 };
 
@@ -80,6 +95,8 @@ public:
 
 	// Get current round
 	int GetRound() const;
+	// Get max rounds
+	int GetMaxRounds() const;
 	// Get a round
 	const RoundHistory * GetRound(int round) const;
 	// Get a round depending on region
@@ -89,18 +106,24 @@ public:
 	// Set how many rounds
 	void SetRounds(int rounds);
 
+	// Get bot current regions owned
+	RegionHistoryList GetBotRegions(const Bot * owner) const;
+
 	// Modify current round
 	// Add region that have changed
 	void AddRegion(const Region * region);
 	void AddRegion(const Region * region, const Bot * owner, int army);
 	// Add movement that occurred
+	void AddMovement(const Region * from, const Region * to, int army);
 	void AddMovements(const ArmyMovements & movement);
+	// Add placement that occured
+	void AddPlacement(const Region * region, int army);
+	void AddPlacement(int region, int army);
+	void AddPlacements(const ArmyPlacements & placement);
 	// Move on to next round
 	void NextRound();
 
 private:
-
-	RoundHistory & GetRound(int round);
 
 	std::vector<RoundHistory> m_rounds;
 	int m_round;
