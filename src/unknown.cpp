@@ -12,7 +12,6 @@
 #include "stl_sort.hpp"
 
 Unknown::Unknown()
-//: m_armies(0)
 {
 }
 
@@ -93,8 +92,6 @@ void Unknown::onGoPlaceArmies(float time)
 {
 	Timer timer;
 	timer.Start();
-	// Get neutral area bot
-	//Bot * neutral = g_game->GetNeutral();
 	
 	Region * region = 0;
 	
@@ -268,24 +265,10 @@ void Unknown::onGoPlaceArmies(float time)
 		// Sort in the way of priority
 		std::sort(place.begin(), place.end(), compare_region_super_region_priority);
 		
-		// Go through the list, placing the last armies
-		#if 0
-		Regions::iterator it = place.begin();
-		while (m_armies > 0)
-		{
-			region = *it;
-			// Add one to each region
-			PlaceArmy(region, 1);
-			++it;
-			// Go around
-			if (it == place.end())
-				it = place.begin();
-		}
-		#else
 		// Place instead everything on one
+		// Note: Previous one was distributing it evenly
 		if (!place.empty())
 			PlaceArmy(place.front(), m_placements.GetAvailableArmies());
-		#endif
 	}
 	
 	// Just to ensure everything is placed
@@ -323,8 +306,6 @@ void Unknown::onGoAttackTransfer(float time)
 {
 	Timer timer;
 	timer.Start();
-	// Get neutral area bot
-	//Bot * neutral = g_game->GetNeutral();
 
 	// Strategy variables
 	// Chance for region to attack neutral regions
@@ -446,10 +427,10 @@ void Unknown::onGoAttackTransfer(float time)
 				continue;
 			}
 
-#if 1
 			// Sort the neutrals according to super region priority
 			std::sort(neutrals.begin(), neutrals.end(), compare_regions_bot_priority);
 
+			// Attack several neutrals at the same time if possible
 			// Note: Fix this better later on
 			{
 				Regions attack;
@@ -490,37 +471,6 @@ void Unknown::onGoAttackTransfer(float time)
 					}
 				}
 			}
-
-#else
-
-			// Get amount of armies around the region
-			Region * optimal = neutrals.front();
-			float opt_max = 0;
-			
-			// Keep priority within super region
-			for (Regions::iterator nt = neutrals.begin(); nt != neutrals.end(); ++nt)
-			{
-				Region * r = *nt;
-				// Get my bot ownership of super region count
-				int count = r->GetSuperRegion()->GetBotRegionCount(this);
-				// Get priority of super region
-				float prio = r->GetSuperRegion()->GetPriority(count);
-				// Update optimal pick
-				if (prio > opt_max)
-				{
-					opt_max = prio;
-					optimal = r;
-				}
-			}
-
-			// Attack if enough power
-			// Note: This was set to 1.5 in previous project. Probably not needed now when the luck factor is so low.
-			if (Region::CalculateAttackProbability(region, optimal) > 1.0f)
-			{
-				// Note: How many armies moved should be changed later on
-				MoveArmy(region, optimal, region->GetArmies()-1);
-			}
-#endif
 		}
 	}
 	
