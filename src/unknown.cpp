@@ -324,6 +324,7 @@ void Unknown::onGoAttackTransfer(float time)
 	// Strategy variables
 	// Chance for region to attack neutral regions
 	float neutral_army_attack = 1.5f;
+	float army_per_round_weight = 0.5f;
 	
 	Region * region = 0;
 	
@@ -361,7 +362,7 @@ void Unknown::onGoAttackTransfer(float time)
 			// The region that will be attacked
 			Region * attack_region = host.front();
 			// Get the most probably amount of army
-			int defense_armies = attack_region->GetArmies() + m_armies_per_bot[attack_region->GetOwner()];
+			int defense_armies = attack_region->GetArmies() + (m_armies_per_bot[attack_region->GetOwner()] * army_per_round_weight);
 			
 			// Note: Attack probability could change depending on several interactions
 			
@@ -429,7 +430,7 @@ void Unknown::onGoAttackTransfer(float time)
 					if (used_bot.find(attack_region->GetOwner()) == used_bot.end())
 					{
 						// Increase armies that can attack
-						defense_armies += m_armies_per_bot[attack_region->GetOwner()];
+						defense_armies += m_armies_per_bot[attack_region->GetOwner()] * army_per_round_weight;
 						used_bot.insert(attack_region->GetOwner());
 					}
 				}
